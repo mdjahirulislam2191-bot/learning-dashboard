@@ -1,171 +1,85 @@
 <!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📊 Commander HQ</title>
-<link rel="stylesheet" href="tab-style.css">
-<style>
-.hidden{display:none}
-</style>
-</head>
-<body>
+<html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>📊 Commander HQ</title><link rel="stylesheet" href="tab-style.css"></head><body>
 
-<!-- ===== SIDEBAR (Tabs) ===== -->
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <h2>⚔ Commander HQ</h2>
-    <div class="tag">Learning Dashboard</div>
-  </div>
+<nav class="sidebar">
+  <div class="sidebar-logo"><h2>⚔ Commander HQ</h2><div class="tag">Learning Dashboard</div></div>
   <div class="nav-group">🧠 Learning</div>
   <button class="tab-btn active" data-track="python" onclick="switchTab('python')"><span class="tab-icon">🐍</span><span>Python</span></button>
-  <button class="tab-btn" data-track="sql" onclick="switchTab('sql')"><span class="tab-icon">🗄️</span><span>SQL/MySQL</span></button>
+  <button class="tab-btn" data-track="sql" onclick="switchTab('sql')"><span class="tab-icon">🗄️</span><span>SQL</span></button>
   <button class="tab-btn" data-track="powerbi" onclick="switchTab('powerbi')"><span class="tab-icon">📊</span><span>Power BI</span></button>
   <button class="tab-btn" data-track="cfa" onclick="switchTab('cfa')"><span class="tab-icon">📈</span><span>CFA + Quant</span></button>
   <button class="tab-btn" data-track="english" onclick="switchTab('english')"><span class="tab-icon">🇬🇧</span><span>English</span></button>
-  <div class="nav-group">📊 Tools & Skills</div>
+  <div class="nav-group">📊 Tools</div>
   <button class="tab-btn" data-track="excel" onclick="switchTab('excel')"><span class="tab-icon">📗</span><span>Excel</span></button>
-  <button class="tab-btn" data-track="stats" onclick="switchTab('stats')"><span class="tab-icon">📉</span><span>Statistics</span></button>
+  <button class="tab-btn" data-track="stats" onclick="switchTab('stats')"><span class="tab-icon">📉</span><span>Stats</span></button>
   <button class="tab-btn" data-track="git" onclick="switchTab('git')"><span class="tab-icon">🐙</span><span>Git</span></button>
   <div class="nav-group">🤖 Data Science</div>
   <button class="tab-btn" data-track="ds" onclick="switchTab('ds')"><span class="tab-icon">🔬</span><span>Data Science</span></button>
   <button class="tab-btn" data-track="ml" onclick="switchTab('ml')"><span class="tab-icon">🧠</span><span>ML</span></button>
   <button class="tab-btn" data-track="dl" onclick="switchTab('dl')"><span class="tab-icon">⚡</span><span>Deep Learning</span></button>
-  <div class="nav-group">🎯 Goals</div>
-  <button class="tab-btn" data-track="wealth" onclick="switchTab('wealth')"><span class="tab-icon">💰</span><span>$100B Goal</span></button>
+  <div class="nav-group">🎯 Goal</div>
+  <button class="tab-btn" data-track="wealth" onclick="switchTab('wealth')"><span class="tab-icon">💰</span><span>$100B</span></button>
 </nav>
 
-<!-- ===== MAIN ===== -->
-<div class="main" id="mainContent">
+<div class="main">
   <div class="top-bar">
     <h1>📊 <span>Commander's HQ</span></h1>
-    <div style="font-size:13px;color:var(--dim);background:var(--card);padding:6px 14px;border-radius:16px;border:1px solid var(--border)">
-      321 Lessons
-    </div>
+    <div style="font-size:13px;color:var(--dim);background:var(--card);padding:6px 14px;border-radius:16px;border:1px solid var(--border)">321 Lessons</div>
   </div>
   <div id="tabContent"></div>
 </div>
 
 <script>
-// ===== TRACK DATA =====
-const TRACKS = {
-  python:{icon:'🐍',color:'#3776ab',name:'Python',subtitle:'Data Analysis Foundation',goal:'20 days',base:'Python/',ext:'md',files:[
-    {n:1,f:'week01_basics/day01_variables_easy.md',l:'Variables & Data Types',t:'Variables, strings, numbers, type()'},
-    {n:2,f:'week01_basics/day02_conditions_easy.md',l:'Conditions (if/elif/else)',t:'if, elif, else, comparison operators'},
-    {n:3,f:'week01_basics/day03_loops_easy.md',l:'Loops (for/while)',t:'for loops, while, range, break, continue'},
-    {n:4,f:'week01_basics/day04_lists_dicts.py',l:'Lists & Dictionaries',t:'list operations, dict, tuples, sets'},
-    {n:5,f:'week01_basics/day05_functions.py',l:'Functions',t:'def, return, args, kwargs, scope'},
-    {n:6,f:'week01_basics/day06_strings.py',l:'Strings & Methods',t:'string methods, formatting, slicing'},
-    {n:7,f:'week01_basics/day07_fileio.py',l:'File I/O',t:'open, read, write, CSV, with statement'},
-    {n:8,f:'week01_basics/day08_errors.py',l:'Error Handling',t:'try, except, finally, custom errors'},
-    {n:9,f:'week01_basics/day09_numpy.py',l:'NumPy',t:'arrays, shapes, vectorized ops, stats'},
-    {n:10,f:'week01_basics/day10_pandas_series.py',l:'Pandas Series',t:'Series, indexing, filtering, math'},
-    {n:11,f:'week01_basics/day11_pandas_dataframe.py',l:'Pandas DataFrame',t:'DataFrame, columns, joins, groupby'},
-    {n:12,f:'week01_basics/day12_data_cleaning.py',l:'Data Cleaning',t:'NaN, duplicates, outliers, merge'},
-    {n:13,f:'week01_basics/day13_matplotlib.py',l:'Matplotlib',t:'line, bar, scatter, histogram, styling'},
-    {n:14,f:'week01_basics/day14_aggregation.py',l:'Data Aggregation',t:'groupby, agg, pivot_table, multi-index'},
-    {n:15,f:'week01_basics/day15_mini_project.py',l:'Mini Project',t:'Financial data analysis project'},
-    {n:16,f:'week01_basics/day16_apis_json.py',l:'APIs & JSON',t:'requests, JSON, API data, parsing'},
-    {n:17,f:'week01_basics/day17_web_scraping.py',l:'Web Scraping',t:'BeautifulSoup, HTML parsing, tables'},
-    {n:18,f:'week01_basics/day18_portfolio_project.py',l:'Portfolio Project',t:'Full analysis pipeline project'},
-    {n:19,f:'week01_basics/day19_portfolio_polish.py',l:'Portfolio Polish',t:'Code cleanup, docs, testing'},
-    {n:20,f:'week01_basics/day20_capstone.py',l:'Capstone',t:'End-to-end data analysis capstone'},
-  ]},
-  sql:{icon:'🗄️',color:'#00758f',name:'SQL (MySQL)',subtitle:'Database & Query Mastery',goal:'15 days',base:'SQL/',ext:'sql',files:[
-    {n:1,f:'day01_mysql_setup.sql',l:'MySQL Setup & DB',t:'Install, CREATE DATABASE, USE, tables'},{n:2,f:'day02_mysql_crud.sql',l:'CRUD Operations',t:'INSERT, SELECT, UPDATE, DELETE'},
-    {n:3,f:'day03_mysql_filtering.sql',l:'WHERE, LIKE, IN',t:'WHERE, AND/OR, IN, BETWEEN, LIKE'},{n:4,f:'day04_mysql_grouping.sql',l:'GROUP BY & HAVING',t:'GROUP BY, HAVING, COUNT, SUM, AVG'},
-    {n:5,f:'day05_mysql_joins.sql',l:'JOINs',t:'INNER, LEFT, RIGHT, self JOIN, UNION'},{n:6,f:'day06_mysql_subqueries.sql',l:'Subqueries',t:'WHERE subquery, FROM subquery, EXISTS'},
-    {n:7,f:'day07_mysql_window.sql',l:'Window Functions',t:'ROW_NUMBER, RANK, LEAD, LAG, SUM OVER'},{n:8,f:'day08_mysql_ctes.sql',l:'CTEs',t:'WITH, recursive CTE, multiple CTEs'},
-    {n:9,f:'day09_mysql_constraints.sql',l:'Constraints & Keys',t:'PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK'},{n:10,f:'day10_mysql_alter_drop.sql',l:'ALTER/CREATE/DROP',t:'ALTER TABLE, ADD, DROP, MODIFY column'},
-    {n:11,f:'day11_mysql_views_indexes.sql',l:'Views & Indexes',t:'CREATE VIEW, indexes, query optimization'},{n:12,f:'day12_mysql_procedures.sql',l:'Stored Procedures',t:'CREATE PROCEDURE, parameters, variables'},
-    {n:13,f:'day13_mysql_normalization.sql',l:'DB Normalization',t:'1NF, 2NF, 3NF, schema design'},{n:14,f:'day14_mysql_portfolio.sql',l:'Portfolio Project',t:'Full SQL project with multiple tables'},
-    {n:15,f:'day15_mysql_backup.sql',l:'Backup & GitHub',t:'mysqldump, export, git, deployment'},
-  ]},
-  powerbi:{icon:'📊',color:'#f2c811',name:'Power BI',subtitle:'Visualization & Dashboards',goal:'12 days',base:'PowerBI/',ext:'md',files:[
-    {n:1,f:'day01_easy.md',l:'Setup & Interface',t:'Install, UI tour, first chart'},{n:2,f:'day02_easy.md',l:'Basic Charts',t:'Bar, Line, Pie, formatting'},
-    {n:3,f:'day03_data_import.md',l:'Data Import',t:'Excel, CSV, SQL import, transform'},{n:4,f:'day04_dax_basics.md',l:'DAX Basics',t:'SUM, AVERAGE, COUNT, CALCULATE'},
-    {n:5,f:'day05_relationships.md',l:'Relationships',t:'Star schema, cardinality, cross-filter'},{n:6,f:'day06_filters_slicers.md',l:'Filters & Slicers',t:'Page/visual filters, timeline, slicer'},
-    {n:7,f:'day07_time_intelligence.md',l:'Time Intelligence',t:'YTD, QTD, SAMEPERIODLASTYEAR'},{n:8,f:'day08_custom_visuals.md',l:'Custom Visuals',t:'Marketplace, custom charts, formatting'},
-    {n:9,f:'day09_bookmarks.md',l:'Bookmarks & Nav',t:'Bookmarks, buttons, drill-through'},{n:10,f:'day10_powerbi_service.md',l:'Power BI Service',t:'Publish, dashboard, sharing, gateway'},
-    {n:11,f:'day11_mini_project.md',l:'Mini Project',t:'Sales dashboard with DAX'},{n:12,f:'day12_portfolio_project.md',l:'Portfolio Dashboard',t:'Full finance dashboard project'},
-  ]},
-  cfa:{icon:'📈',color:'#9747ff',name:'CFA + Quant',subtitle:'Level 1 → 2 → 3',goal:'60 days',base:'CFA/level1/',ext:'md',files:genDays('cfa',60)},
-  english:{icon:'🇬🇧',color:'#22d3ee',name:'English (C-Level)',subtitle:'Interview & Professional',goal:'24 days',base:'English/',ext:'md',files:genDays('english',24)},
-  excel:{icon:'📗',color:'#217346',name:'Excel Advanced',subtitle:'Pivot, VLOOKUP, Macros',goal:'12 days',base:'Excel/',ext:'md',files:genDays('excel',12)},
-  stats:{icon:'📉',color:'#8b5cf6',name:'Statistics',subtitle:'For Data Science',goal:'10 days',base:'Statistics/',ext:'md',files:genDays('stats',10)},
-  git:{icon:'🐙',color:'#f05032',name:'Git & GitHub',subtitle:'Version Control',goal:'8 days',base:'Git/',ext:'md',files:genDays('git',8)},
-  ds:{icon:'🔬',color:'#0d6efd',name:'Data Science',subtitle:'Statistics + EDA + Viz',goal:'30 days',base:'DataScience/',ext:'md',files:genDays('ds',30)},
-  ml:{icon:'🧠',color:'#6f42c1',name:'Machine Learning',subtitle:'Regression + Classification',goal:'60 days',base:'MachineLearning/',ext:'md',files:genDays('ml',60)},
-  dl:{icon:'⚡',color:'#dc3545',name:'Deep Learning',subtitle:'CNN + RNN + LSTM',goal:'60 days',base:'DeepLearning/',ext:'md',files:genDays('dl',60)},
-  wealth:{icon:'💰',color:'#f59e0b',name:'$100B Goal',subtitle:'20-Year Vision',goal:'1 overview',base:'Wealth/',ext:'md',files:[{n:1,f:'100B_MASTER_PLAN.md',l:'Master Plan',t:'20-year wealth building roadmap'}]},
+// ===== TRACKS DATA =====
+var T={
+python:{i:'🐍',c:'#3776ab',n:'Python',b:'Python/',f:{1:'week01_basics/day01_variables_easy.md',2:'week01_basics/day02_conditions_easy.md',3:'week01_basics/day03_loops_easy.md',4:'week01_basics/day04_lists_dicts.py',5:'week01_basics/day05_functions.py',6:'week01_basics/day06_strings.py',7:'week01_basics/day07_fileio.py',8:'week01_basics/day08_errors.py',9:'week01_basics/day09_numpy.py',10:'week01_basics/day10_pandas_series.py',11:'week01_basics/day11_pandas_dataframe.py',12:'week01_basics/day12_data_cleaning.py',13:'week01_basics/day13_matplotlib.py',14:'week01_basics/day14_aggregation.py',15:'week01_basics/day15_mini_project.py',16:'week01_basics/day16_apis_json.py',17:'week01_basics/day17_web_scraping.py',18:'week01_basics/day18_portfolio_project.py',19:'week01_basics/day19_portfolio_polish.py',20:'week01_basics/day20_capstone.py'},l:['Variables & Types','Conditions','Loops','Lists & Dicts','Functions','Strings','File I/O','Error Handling','NumPy','Pandas Series','DataFrame','Data Cleaning','Matplotlib','Aggregation','Mini Project','APIs & JSON','Web Scraping','Portfolio Project','Portfolio Polish','Capstone'],d:'20 days'},
+sql:{i:'🗄️',c:'#00758f',n:'SQL (MySQL)',b:'SQL/',f:{1:'day01_mysql_setup.sql',2:'day02_mysql_crud.sql',3:'day03_mysql_filtering.sql',4:'day04_mysql_grouping.sql',5:'day05_mysql_joins.sql',6:'day06_mysql_subqueries.sql',7:'day07_mysql_window.sql',8:'day08_mysql_ctes.sql',9:'day09_mysql_constraints.sql',10:'day10_mysql_alter_drop.sql',11:'day11_mysql_views_indexes.sql',12:'day12_mysql_procedures.sql',13:'day13_mysql_normalization.sql',14:'day14_mysql_portfolio.sql',15:'day15_mysql_backup.sql'},l:['Setup & DB','CRUD','WHERE, LIKE, IN','GROUP BY & HAVING','JOINs','Subqueries','Window Functions','CTEs','Constraints & Keys','ALTER/CREATE/DROP','Views & Indexes','Stored Procedures','DB Normalization','Portfolio Project','Backup & GitHub'],d:'15 days'},
+powerbi:{i:'📊',c:'#f2c811',n:'Power BI',b:'PowerBI/',f:{1:'day01_easy.md',2:'day02_easy.md',3:'day03_data_import.md',4:'day04_dax_basics.md',5:'day05_relationships.md',6:'day06_filters_slicers.md',7:'day07_time_intelligence.md',8:'day08_custom_visuals.md',9:'day09_bookmarks.md',10:'day10_powerbi_service.md',11:'day11_mini_project.md',12:'day12_portfolio_project.md'},l:['Setup & Interface','Basic Charts','Data Import','DAX Basics','Relationships','Filters & Slicers','Time Intelligence','Custom Visuals','Bookmarks','Power BI Service','Mini Project','Portfolio Dashboard'],d:'12 days'},
+cfa:{i:'📈',c:'#9747ff',n:'CFA Level 1',b:'CFA/level1/',f:{1:'day02_standards1.md',2:'day03_standards2.md',3:'day04_standards3.md',4:'day05_gips.md',5:'day06_ethics_practice.md',6:'day07_ethics_mock.md',7:'day08_tvm.md',8:'day09_dcf.md',9:'day10_statistics.md',10:'day11_distributions.md',11:'day12_sampling.md',12:'day13_quant_practice.md',13:'day14_micro.md',14:'day15_market_structures.md',15:'day16_macro_gdp.md',16:'day17_monetary.md',17:'day18_trade_fx.md',18:'day19_econ_practice.md',19:'day20_income_statements.md',20:'day21_balance_sheets.md',21:'day22_cash_flow.md',22:'day23_ratios.md',23:'day24_inventory.md',24:'day25_fsa_practice.md',25:'day26_governance.md',26:'day27_cap_budgeting.md',27:'day28_cost_of_capital.md',28:'day29_working_capital.md',29:'day30_corporate_practice.md',30:'day31_market_structure.md',31:'day32_indices.md',32:'day33_efficiency.md',33:'day34_ddm.md',34:'day35_fcf_models.md',35:'day36_equity_practice.md',36:'day37_fi_features.md',37:'day38_fi_risk.md',38:'day39_fi_valuation.md',39:'day40_term_structure.md',40:'day41_fi_practice.md',41:'day42_forwards_futures.md',42:'day43_options_swaps.md',43:'day44_derivatives_practice.md',44:'day45_pe_hf.md',45:'day46_commodities.md',46:'day47_ai_practice.md',47:'day48_mpt.md',48:'day49_capm.md',49:'day50_eff_frontier.md',50:'day51_risk_mgmt.md',51:'day52_portfolio_practice.md',52:'day53_correlation_regression.md',53:'day54_time_series.md',54:'day55_quant_practice.md',55:'day56_currency_exchange.md',56:'day57_growth.md',57:'day58_regulation.md',58:'day59_mock1.md',59:'day60_mock2.md',60:'INDEX.md'},l:['Ethics: Code','Standards I-II','Standards III-IV','Standards V-VII','GIPS','Ethics Practice','Ethics Mock','Quant: TVM','Quant: DCF','Quant: Stats','Distributions','Sampling','Quant Practice','Econ: Micro','Market Structures','Macro/GDP','Monetary Policy','Trade & FX','Econ Practice','FSA: Income Stmt','FSA: Balance Sheet','FSA: Cash Flow','FSA: Ratios','FSA: Inventory','FSA Practice','Corporate: Gov','Cap Budgeting','Cost of Capital','Working Capital','Corporate Practice','Equity: Market','Indices','Efficiency','DDM','FCF Models','Equity Practice','FI: Features','FI: Risk','FI: Valuation','Term Structure','FI Practice','Forwards/Futures','Options/Swaps','Derivatives Practice','PE & Hedge Funds','Commodities','Alts Practice','MPT','CAPM','Eff Frontier','Risk Management','Portfolio Practice','Correlation/Reg','Time Series','Quant Practice','Currency Exchange','Growth','Regulation','Mock Exam 1','Mock Exam 2','Full Review'],d:'60 days'},
+english:{i:'🇬🇧',c:'#22d3ee',n:'English (C-Level)',b:'English/',f:{1:'day01_easy.md',2:'day02_easy.md',3:'day03_easy.md',4:'day04_easy.md',5:'day05_easy.md',6:'day06_easy.md',7:'day07_easy.md',8:'day08_easy.md',9:'day09_easy.md',10:'day10_easy.md',11:'day11_easy.md',12:'day12_easy.md',13:'day13_adv.md',14:'day14_adv.md',15:'day15_adv.md',16:'day16_adv.md',17:'day17_adv.md',18:'day18_adv.md',19:'day19_adv.md',20:'day20_adv.md',21:'day21_adv.md',22:'day22_adv.md',23:'day23_adv.md',24:'day24_adv.md'},l:['Greetings & Intro','Background','Simple Q&A','Describing Skills','Experience','Week 1 Review','Interview Qs','STAR Method','Tech Vocab','Behavioral Qs','Ask Questions','Mock Interview','Emails & Reports','Meetings','Presentations','Negotiation','Networking','Week 3 Review','C-Level Speech','Complex Scenarios','Elevator Pitch','Panel Interview','Full Mock','Final Review'],d:'24 days'},
+excel:{i:'📗',c:'#217346',n:'Excel Advanced',b:'Excel/',f:{1:'day01_pivot_intro.md',2:'day02_pivot_advanced.md',3:'day03_vlookup_index_match.md',4:'day04_xlookup_nested_lookup.md',5:'day05_conditional_formatting_data_validation.md',6:'day06_charts_sparklines.md',7:'day07_whatif_analysis.md',8:'day08_power_query_basics.md',9:'day09_advanced_formulas.md',10:'day10_macros_vba.md',11:'day11_dashboard_design.md',12:'day12_dashboard_project.md'},l:['Pivot Tables Intro','Pivot Advanced','VLOOKUP & INDEX','XLOOKUP','Conditional Format','Charts & Sparklines','What-If Analysis','Power Query','Advanced Formulas','Macros & VBA','Dashboard Design','Portfolio Dashboard'],d:'12 days'},
+stats:{i:'📉',c:'#8b5cf6',n:'Statistics',b:'Statistics/',f:{1:'day01_descriptive.md',2:'day02_variance_std.md',3:'day03_probability.md',4:'day04_normal_distribution.md',5:'day05_sampling_ci.md',6:'day06_hypothesis_testing.md',7:'day07_correlation.md',8:'day08_regression.md',9:'day09_anova.md',10:'day10_portfolio_stats.md'},l:['Descriptive Stats','Variance & Std Dev','Probability','Normal Distribution','Sampling & CI','Hypothesis Testing','Correlation','Regression','ANOVA','Portfolio Project'],d:'10 days'},
+git:{i:'🐙',c:'#f05032',n:'Git & GitHub',b:'Git/',f:{1:'day01_intro.md',2:'day02_basic_commands.md',3:'day03_branching_merging.md',4:'day04_remote_github.md',5:'day05_pull_requests.md',6:'day06_gitignore_branching.md',7:'day07_collaboration_workflow.md',8:'day08_portfolio.md'},l:['Git Intro & Setup','Basic Commands','Branching & Merging','Remote & GitHub','Pull Requests','.gitignore & Strategy','Collaboration Workflow','Portfolio Project'],d:'8 days'},
+ds:{i:'🔬',c:'#0d6efd',n:'Data Science',b:'DataScience/',f:{1:'day01_ds_overview.md',2:'day02_python_for_ds.md',3:'day03_numpy_deep_dive.md',4:'day04_pandas_mastery1.md',5:'day05_pandas_mastery2.md',6:'day06_data_cleaning.md',7:'day07_eda.md',8:'day08_visualization.md',9:'day09_feature_engineering.md',10:'day10_project_cleaning_eda.md',11:'day11_probability.md',12:'day12_feature_engineering.md',13:'day13_sampling.md',14:'day14_hypothesis_testing.md',15:'day15_project_sampling_testing.md',16:'day16_linear_regression.md',17:'day17_multiple_regression.md',18:'day18_evaluation_metrics.md',19:'day19_logistic_regression.md',20:'day20_decision_trees.md',21:'day21_confusion_matrix.md',22:'day22_classification_metrics.md',23:'day23_kmeans.md',24:'day24_pca.md',25:'day25_time_series.md',26:'day26_project_regression.md',27:'day27_project_classification.md',28:'day28_project_clustering.md',29:'day29_capstone_part1.md',30:'day30_capstone_part2.md'},l:['DS Overview','Python for DS','NumPy Deep Dive','Pandas 1','Pandas 2','Data Cleaning','EDA','Visualization','Feature Engineering','Project: EDA','Probability','Feature Eng 2','Sampling','Hypothesis Testing','Project: Sampling','Linear Regression','Multiple Regression','Eval Metrics','Logistic Regression','Decision Trees','Confusion Matrix','Classification Metrics','K-Means','PCA','Time Series','Project: Regression','Project: Classify','Project: Cluster','Capstone Part 1','Capstone Part 2'],d:'30 days'},
+ml:{i:'🧠',c:'#6f42c1',n:'Machine Learning',b:'MachineLearning/',f:{1:'day01_ml_overview.md',2:'day02_supervised_unsupervised.md',3:'day03_python_ml_stack_scikit.md',4:'day04_data_preprocessing.md',5:'day05_train_test_split.md',6:'day06_linear_regression.md',7:'day07_multiple_regression.md',8:'day08_polynomial_regression.md',9:'day09_regularization_ridge_lasso.md',10:'day10_evaluation_metrics.md',11:'day11_logistic_regression.md',12:'day12_decision_trees.md',13:'day13_random_forest.md',14:'day14_gradient_boosting.md',15:'day15_xgboost.md',16:'day16_svm.md',17:'day17_knn.md',18:'day18_naive_bayes.md',19:'day19_ensemble_methods.md',20:'day20_model_evaluation_cv_grid.md',21:'day21_kmeans.md',22:'day22_hierarchical_clustering.md',23:'day23_dbscan.md',24:'day24_pca.md',25:'day25_tsne.md',26:'day26_feature_engineering.md',27:'day27_feature_selection.md',28:'day28_hyperparameter_tuning.md',29:'day29_pipeline.md',30:'day30_imbalanced_data.md',31:'day31_time_series_forecasting.md',32:'day32_arima.md',33:'day33_prophet.md',34:'day34_lstm_basics.md',35:'day35_stock_prediction.md',36:'day36_recommender_systems.md',37:'day37_anomaly_detection.md',38:'day38_nlp_basics.md',39:'day39_sentiment_analysis.md',40:'day40_text_classification.md',41:'day41_model_deployment.md',42:'day42_model_serialization.md',43:'day43_docker_intro.md',44:'day44_mlflow_intro.md',45:'day45_model_monitoring.md',46:'day46_ab_testing.md',47:'day47_experiment_design.md',48:'day48_causality.md',49:'day49_fairness_ml.md',50:'day50_ethics_ml.md',51:'day51_stacking_blending.md',52:'day52_feature_importance.md',53:'day53_shap_values.md',54:'day54_partial_dependence.md',55:'day55_model_interpretability.md',56:'day56_capstone_data_prep.md',57:'day57_capstone_feature_eng.md',58:'day58_capstone_model_building.md',59:'day59_capstone_evaluation.md',60:'day60_capstone_deploy.md'},l:['ML Overview','Sup vs Unsup','Python ML Stack','Preprocessing','Train/Test Split','Linear Regression','Multiple Regression','Polynomial Reg','Ridge/Lasso','Eval Metrics','Logistic Regression','Decision Trees','Random Forest','Gradient Boost','XGBoost','SVM','KNN','Naive Bayes','Ensemble','CV & Grid Search','K-Means','Hierarchical','DBSCAN','PCA','t-SNE','Feature Eng','Feature Sel','Hyperparam Tune','Pipeline','Imbalanced Data','Time Series','ARIMA','Prophet','LSTM','Stock Predict','Recommender','Anomaly Detection','NLP Basics','Sentiment','Text Classify','Deployment','Serialization','Docker','MLflow','Monitoring','A/B Testing','Experiment','Causality','Fairness','Ethics','Stacking/Blend','Feature Import','SHAP','Partial Dep','Interpret','Capstone: Prep','Capstone: Features','Capstone: Model','Capstone: Eval','Capstone: Deploy'],d:'60 days'},
+dl:{i:'⚡',c:'#dc3545',n:'Deep Learning',b:'DeepLearning/',f:{1:'day01_dl_overview.md',2:'day02_neural_networks_basics.md',3:'day03_perceptron.md',4:'day04_activation_functions.md',5:'day05_backpropagation.md',6:'day06_tensorflow_pytorch_intro.md',7:'day07_building_first_nn.md',8:'day08_loss_functions_optimizers.md',9:'day09_loss_functions_optimizers_deep.md',10:'day10_training_loop_evaluation.md',11:'day11_ann_deep_dive.md',12:'day12_hyperparameter_tuning.md',13:'day13_regularization.md',14:'day14_early_stopping_callbacks.md',15:'day15_project_ann_stock_prediction.md',16:'day16_cnn_basics.md',17:'day17_convolution_pooling.md',18:'day18_image_classification.md',19:'day19_transfer_learning.md',20:'day20_finetuning_practical_cnn.md',21:'day21_rnn_basics.md',22:'day22_lstm.md',23:'day23_gru.md',24:'day24_time_series_lstm.md',25:'day25_stock_prediction_lstm.md',26:'day26_sequence_models.md',27:'day27_bidirectional_rnn.md',28:'day28_attention_mechanism.md',29:'day29_encoder_decoder.md',30:'day30_seq2seq.md',31:'day31_autoencoders.md',32:'day32_denoising_autoencoder.md',33:'day33_variational_autoencoder.md',34:'day34_dimensionality_reduction_ae.md',35:'day35_anomaly_detection_ae.md',36:'day36_gans_intro.md',37:'day37_dcgan.md',38:'day38_conditional_gan.md',39:'day39_synthetic_data_generation.md',40:'day40_gan_evaluation.md',41:'day41_transfer_learning.md',42:'day42_bert_intro.md',43:'day43_transformers.md',44:'day44_finetuning_transformers.md',45:'day45_nlp_transformers.md',46:'day46_rl_intro.md',47:'day47_q_learning.md',48:'day48_dqn.md',49:'day49_policy_gradients.md',50:'day50_rl_trading.md',51:'day51_resnet.md',52:'day52_inception.md',53:'day53_efficientnet.md',54:'day54_model_pruning.md',55:'day55_quantization.md',56:'day56_capstone_data_prep.md',57:'day57_capstone_lstm.md',58:'day58_capstone_evaluation.md',59:'day59_capstone_portfolio.md',60:'day60_capstone_summary.md'},l:['DL Overview','NN Basics','Perceptron','Activation Fn','Backprop','TF/PyTorch','First NN','Loss & Opt','Optimizers Deep','Training Loop','ANN Deep Dive','Hyperparam Tune','Regularization','Early Stop','ANN Stock','CNN Basics','Conv & Pool','Image Classify','Transfer Learn','CNN Finetune','RNN Basics','LSTM','GRU','Time Series LSTM','Stock LSTM','Sequence Models','Bidirectional','Attention','Encoder-Decoder','Seq2Seq','Autoencoders','Denoising AE','VAE','Dim Reduct AE','Anomaly AE','GANs','DCGAN','Conditional GAN','Synthetic Data','GAN Eval','Transfer Learn2','BERT','Transformers','Finetune Trans','NLP Trans','RL Intro','Q-Learning','DQN','Policy Grad','RL Trading','ResNet','Inception','EfficientNet','Pruning','Quantization','Cap: Data Prep','Cap: LSTM','Cap: Eval','Cap: Portfolio','Cap: Summary'],d:'60 days'},
+wealth:{i:'💰',c:'#f59e0b',n:'$100B Goal',b:'Wealth/',f:{1:'100B_MASTER_PLAN.md'},l:['Master Plan Overview'],d:'1 overview'}
 };
 
-function genDays(trackId,total){
-  const days=[];
-  const topics={cfa:['Ethics: Standards','Quant: TVM/DCF','Stats/Distributions','Sampling','Econ: Micro/Macro','Econ: Policy/FX','FSA: Statements','FSA: Ratios','Corporate Finance','Equity: DDM/FCF','Fixed Income','Derivatives','Alternatives','Portfolio Mgmt','Mock Exams'],english:['Interview Basics','STAR Method','Tech Vocab','Mock Interview','Email Writing','Presentation','Negotiation','C-Level Speech'],excel:['Pivot Tables','VLOOKUP/XLOOKUP','Charts','Power Query','Macros','Dashboard','Formulas','Project'],stats:['Descriptive','Probability','Normal Dist','Hypothesis','Correlation','Regression','ANOVA','Project'],git:['Git Intro','Commands','Branching','GitHub','PRs','Workflow','Project'],ds:['Python Recap','EDA','Viz','Cleaning','Regression','Classification','Clustering','Project'],ml:['Regression','Trees','Ensemble','SVM/KNN','Clustering','NLP','Time Series','Capstone'],dl:['NN Basics','CNN','RNN/LSTM','GANs','Transformers','RL','Capstone']};
-  const t=topics[trackId]||['Day '+i];
-  const labels=['','Basics','Advanced','Practice','Review','Project','Capstone','Final'];
-  for(let i=1;i<=total;i++){
-    const ti=t[(i-1)%t.length];
-    const label=labels[(i-1)%labels.length];
-    days.push({n:i,f:'',l:ti+' — '+label,t:'Day '+i+' of '+total});
-  }
-  return days;
-}
+// ===== EXTENSIONS =====
+var extIcons={py:'🐍 Python',sql:'🗄️ SQL',md:'📝 Markdown'};
+function extOf(f){var p=f.split('.');return p[p.length-1]}
 
 // ===== SWITCH TAB =====
-let currentTrack='python';
-
-function switchTab(trackId){
-  currentTrack=trackId;
-  // Update active tab
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.track===trackId));
-  renderTrack(trackId);
-}
-
-// ===== RENDER TRACK =====
-function renderTrack(trackId){
-  const t=TRACKS[trackId];
-  if(!t)return;
-  const el=document.getElementById('tabContent');
-  const total=t.files.length;
+function switchTab(id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.track===id)});
+  var t=T[id];if(!t)return;
+  var el=document.getElementById('tabContent');
+  var days=Object.keys(t.f).sort(function(a,b){return a-b});
+  var total=days.length;
   
-  // Stats
-  let done=0;
-  t.files.forEach(f=>{if(f.status==='done')done++});
-  const pct=total>0?Math.round(done/total*100):0;
+  var html='<div class="track-title"><span style="font-size:32px">'+t.i+'</span><span>'+t.n+'</span><span class="sub">'+t.d+' — '+total+' lessons</span></div>';
+  html+='<div class="quick-stats"><div class="qs-card total"><div class="qs-num">'+total+'</div><div class="qs-label">📚 Lessons</div></div>';
+  html+='<div class="qs-card done"><div class="qs-num">0</div><div class="qs-label">✅ Completed</div></div>';
+  html+='<div class="qs-card"><div class="qs-num" style="color:var(--accent)">0%</div><div class="qs-label">🎯 Progress</div></div></div>';
+  html+='<div class="progress-bar"><div class="progress-fill" style="width:0%;background:'+t.c+'"></div></div>';
+  html+='<div class="day-grid">';
   
-  let html=`
-    <div class="track-title"><span class="icon">${t.icon}</span><span class="name">${t.name}</span><span class="sub">${t.subtitle} — ${total} lessons</span></div>
-    <div class="quick-stats">
-      <div class="qs-card total"><div class="qs-num">${total}</div><div class="qs-label">📚 Total Lessons</div></div>
-      <div class="qs-card done"><div class="qs-num">${done}</div><div class="qs-label">✅ Completed</div></div>
-      <div class="qs-card" style="border-color:rgba(0,212,255,0.1)"><div class="qs-num" style="color:var(--accent)">${pct}%</div><div class="qs-label">🎯 Progress</div></div>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${t.color}"></div></div>
-    <div class="day-grid">
-  `;
-  
-  t.files.forEach(f=>{
-    const filePath=t.base+f.f;
-    const ext=filePath.split('.').pop();
-    const extIcons={py:'🐍',sql:'🗄️',md:'📝'};
-    html+=`
-      <a class="day-card" href="lesson.html?file=${filePath}" target="_blank">
-        <div class="day-num">Day ${f.n}</div>
-        <div class="day-label">${f.l}</div>
-        <div class="day-desc">${f.t||''}</div>
-        <div class="file-icon">${extIcons[ext]||'📄'} .${ext}</div>
-      </a>
-    `;
-  });
-  
-  html+=`</div>`;
+  for(var i=0;i<days.length;i++){
+    var dn=days[i];
+    var fp=t.b+t.f[dn];
+    var ext=extOf(t.f[dn]);
+    var label=t.l[i]||'Day '+dn;
+    html+='<a class="day-card" href="lesson.html?file='+fp+'" target="_blank">';
+    html+='<div class="day-num">📅 Day '+dn+'</div>';
+    html+='<div class="day-label">'+label+'</div>';
+    html+='<div class="file-icon">'+ (extIcons[ext]||'📄') +'</div>';
+    html+='</a>';
+  }
+  html+='</div>';
   el.innerHTML=html;
 }
 
-// ===== INIT =====
 switchTab('python');
 </script>
-</body>
-</html>
+</body></html>
