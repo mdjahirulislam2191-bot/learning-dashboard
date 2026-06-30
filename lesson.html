@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📖 Commander HQ — Lesson</title>
+<link rel="stylesheet" href="lesson.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<div class="top-bar">
+  <a class="brand" href="index.html">⚔ Commander HQ</a>
+  <a href="index.html">📊 Dashboard</a>
+  <span style="color:var(--dim);font-size:13px" id="trackLabel"></span>
+  <div class="nav-arrows">
+    <a id="prevBtn" title="Previous Lesson" style="opacity:0.4;pointer-events:none">◀</a>
+    <a id="nextBtn" title="Next Lesson" style="opacity:0.4;pointer-events:none">▶</a>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="content" id="mainContent">
+  <div class="loading-state" id="loadingState">
+    <div class="spinner"></div>
+    <p>লেসন লোড হচ্ছে...</p>
+  </div>
+</div>
+
+<script>
+// ===== CONFIG =====
+const TRACKS = {
+  python:{name:'Python',color:'#3776ab',base:'Python/',ext:'md',files:[
+    {n:1,f:'week01_basics/day01_variables_easy.md',l:'Variables & Data Types'},
+    {n:2,f:'week01_basics/day02_conditions_easy.md',l:'Conditions'},
+    {n:3,f:'week01_basics/day03_loops_easy.md',l:'Loops'},
+    {n:4,f:'week01_basics/day04_lists_dicts.py',l:'Lists & Dictionaries'},
+    {n:5,f:'week01_basics/day05_functions.py',l:'Functions'},
+    {n:6,f:'week01_basics/day06_strings.py',l:'Strings'},
+    {n:7,f:'week01_basics/day07_fileio.py',l:'File I/O'},
+    {n:8,f:'week01_basics/day08_errors.py',l:'Error Handling'},
+    {n:9,f:'week01_basics/day09_numpy.py',l:'NumPy'},
+    {n:10,f:'week01_basics/day10_pandas_series.py',l:'Pandas Series'},
+    {n:11,f:'week01_basics/day11_pandas_dataframe.py',l:'Pandas DataFrame'},
+    {n:12,f:'week01_basics/day12_data_cleaning.py',l:'Data Cleaning'},
+    {n:13,f:'week01_basics/day13_matplotlib.py',l:'Matplotlib'},
+    {n:14,f:'week01_basics/day14_aggregation.py',l:'Aggregation'},
+    {n:15,f:'week01_basics/day15_mini_project.py',l:'Mini Project'},
+    {n:16,f:'week01_basics/day16_apis_json.py',l:'APIs & JSON'},
+    {n:17,f:'week01_basics/day17_web_scraping.py',l:'Web Scraping'},
+    {n:18,f:'week01_basics/day18_portfolio_project.py',l:'Portfolio Project'},
+    {n:19,f:'week01_basics/day19_portfolio_polish.py',l:'Portfolio Polish'},
+    {n:20,f:'week01_basics/day20_capstone.py',l:'Capstone'},
+  ]},
+  sql:{name:'SQL (MySQL)',color:'#00758f',base:'SQL/',ext:'sql',files:[
+    {n:1,f:'day01_mysql_setup.sql',l:'Setup & DB'},{n:2,f:'day02_mysql_crud.sql',l:'CRUD'},
+    {n:3,f:'day03_mysql_filtering.sql',l:'WHERE'},{n:4,f:'day04_mysql_grouping.sql',l:'GROUP BY'},
+    {n:5,f:'day05_mysql_joins.sql',l:'JOINs'},{n:6,f:'day06_mysql_subqueries.sql',l:'Subqueries'},
+    {n:7,f:'day07_mysql_window.sql',l:'Window Functions'},{n:8,f:'day08_mysql_ctes.sql',l:'CTEs'},
+    {n:9,f:'day09_mysql_constraints.sql',l:'Constraints'},{n:10,f:'day10_mysql_alter_drop.sql',l:'ALTER/DROP'},
+    {n:11,f:'day11_mysql_views_indexes.sql',l:'Views & Indexes'},{n:12,f:'day12_mysql_procedures.sql',l:'Procedures'},
+    {n:13,f:'day13_mysql_normalization.sql',l:'Normalization'},{n:14,f:'day14_mysql_portfolio.sql',l:'Project'},
+    {n:15,f:'day15_mysql_backup.sql',l:'Backup'},
+  ]},
+  powerbi:{name:'Power BI',color:'#f2c811',base:'PowerBI/',ext:'md',files:[
+    {n:1,f:'day01_easy.md',l:'Setup'},{n:2,f:'day02_easy.md',l:'Basic Charts'},
+    {n:3,f:'day03_data_import.md',l:'Data Import'},{n:4,f:'day04_dax_basics.md',l:'DAX Basics'},
+    {n:5,f:'day05_relationships.md',l:'Relationships'},{n:6,f:'day06_filters_slicers.md',l:'Filters'},
+    {n:7,f:'day07_time_intelligence.md',l:'Time Intel'},{n:8,f:'day08_custom_visuals.md',l:'Custom Visuals'},
+    {n:9,f:'day09_bookmarks.md',l:'Bookmarks'},{n:10,f:'day10_powerbi_service.md',l:'Service'},
+    {n:11,f:'day11_mini_project.md',l:'Mini Project'},{n:12,f:'day12_portfolio_project.md',l:'Portfolio'},
+  ]},
+  cfa:{name:'CFA Level 1',color:'#9747ff',base:'CFA/level1/',ext:'md',files:[]},
+  english:{name:'English',color:'#22d3ee',base:'English/',ext:'md',files:[]},
+  excel:{name:'Excel',color:'#217346',base:'Excel/',ext:'md',files:[]},
+  stats:{name:'Statistics',color:'#8b5cf6',base:'Statistics/',ext:'md',files:[]},
+  git:{name:'Git & GitHub',color:'#f05032',base:'Git/',ext:'md',files:[]},
+  ds:{name:'Data Science',color:'#0d6efd',base:'DataScience/',ext:'md',files:[]},
+  ml:{name:'Machine Learning',color:'#6f42c1',base:'MachineLearning/',ext:'md',files:[]},
+  dl:{name:'Deep Learning',color:'#dc3545',base:'DeepLearning/',ext:'md',files:[]},
+};
+
+// Load file list dynamically for CFA/English/others
+async function loadFileLists() {
+  for(const [id, track] of Object.entries(TRACKS)) {
+    if(track.files.length > 0) continue; // Already have file list
+    try {
+      const trackData = window.__trackData && window.__trackData[id];
+      if(trackData && trackData.files) {
+        track.files = trackData.files;
+      }
+    } catch(e) { /* fallback to empty */ }
+  }
+}
+
+// ===== PARSE URL =====
+function getParams() {
+  const p = new URLSearchParams(window.location.search);
+  return { file: p.get('file'), track: p.get('track'), day: parseInt(p.get('day')) };
+}
+
+// ===== FIND FILE IN TRACK =====
+function findFile(trackId, dayNum) {
+  const t = TRACKS[trackId];
+  if(!t) return null;
+  return t.files.find(f => f.n === dayNum) || null;
+}
+
+// ===== GET FILE LISTING (for tracks without embedded lists) =====
+async function getFileList(trackId) {
+  const t = TRACKS[trackId];
+  if(!t) return [];
+  if(t.files.length > 0) return t.files;
+  // Generate from pattern
+  const files = [];
+  const totalDays = {cfa:60, english:24, excel:12, stats:10, git:8, ds:30, ml:60, dl:60};
+  const maxDay = totalDays[trackId] || 30;
+  for(let i = 1; i <= maxDay; i++) {
+    files.push({n:i, f:'day'+String(i).padStart(2,'0')+'_*.md', l:'Day '+i});
+  }
+  return files;
+}
+
+// ===== DETECT TRACK FROM FILE PATH =====
+function detectTrack(filePath) {
+  for(const [id, t] of Object.entries(TRACKS)) {
+    if(filePath.startsWith(t.base) || filePath.startsWith(id.toLowerCase())) return id;
+  }
+  if(filePath.startsWith('Python/')||filePath.startsWith('python/')) return 'python';
+  return null;
+}
+
+// ===== LOAD & DISPLAY LESSON =====
+async function loadLesson() {
+  const params = getParams();
+  const contentEl = document.getElementById('mainContent');
+  const trackLabel = document.getElementById('trackLabel');
+
+  // Determine file to load
+  let filePath = params.file;
+  let trackId = params.track || detectTrack(filePath);
+  let dayNum = params.day;
+
+  if(!filePath && trackId && dayNum) {
+    const t = TRACKS[trackId];
+    if(t) {
+      const files = await getFileList(trackId);
+      const found = files.find(f => f.n === dayNum);
+      if(found) filePath = t.base + found.f.replace('_*.md','');
+    }
+  }
+
+  if(!filePath) {
+    contentEl.innerHTML = '<div class="error-state"><h2>📭 লেসন পাওয়া যায়নি</h2><p>URL-এ লেসনের পাথ দিন।<br><a href="index.html" style="color:var(--accent)">← Dashboard-এ ফিরুন</a></p></div>';
+    return;
+  }
+
+  // Clean filePath - remove asterisks
+  filePath = filePath.replace(/_*\*.md$/, '.md');
+
+  // Set track label
+  trackLabel.textContent = trackId ? (TRACKS[trackId]?.name || trackId) : '';
+
+  try {
+    const resp = await fetch(filePath);
+    if(!resp.ok) throw new Error('Not found');
+    const raw = await resp.text();
+
+    // Detect if it's code (.py, .sql) or markdown
+    const isCode = filePath.endsWith('.py') || filePath.endsWith('.sql');
+    const ext = filePath.split('.').pop();
+
+    // Parse day number from filename
+    const dayMatch = filePath.match(/day(\d+)/);
+    const dayNum = dayMatch ? parseInt(dayMatch[1]) : null;
+
+    // Build lesson header
+    let dayLabel = '';
+    if(dayNum && trackId && TRACKS[trackId]) {
+      const t = TRACKS[trackId];
+      const files = await getFileList(trackId);
+      const found = files.find(f => f.n === dayNum);
+      dayLabel = found ? found.l : 'Day '+dayNum;
+    }
+
+    // Render
+    let body = '';
+    if(isCode) {
+      // Code file - wrap in code block
+      const lang = ext === 'py' ? 'python' : 'sql';
+      body = `
+        <div class="lesson-header">
+          <div class="track-badge" style="background:${TRACKS[trackId]?.color || '#333'}22;color:${TRACKS[trackId]?.color || '#fff'}">${TRACKS[trackId]?.name || trackId || ''}</div>
+          <h1><span class="day-num">Day ${dayNum}</span>: ${dayLabel || filePath.split('/').pop()}</h1>
+          <div class="meta">📁 ${filePath}</div>
+        </div>
+        <div class="lesson-content">
+          <pre><code class="language-${lang}">${escapeHtml(raw)}</code></pre>
+        </div>`;
+    } else {
+      // Markdown file - try rendering
+      body = `
+        <div class="lesson-header">
+          <div class="track-badge" style="background:${TRACKS[trackId]?.color || '#333'}22;color:${TRACKS[trackId]?.color || '#fff'}">${TRACKS[trackId]?.name || trackId || ''}</div>
+          <h1><span class="day-num">Day ${dayNum}</span>: ${dayLabel || filePath.split('/').pop()}</h1>
+          <div class="meta">📁 ${filePath}</div>
+        </div>
+        <div class="lesson-content" id="mdContent"></div>`;
+    }
+
+    contentEl.innerHTML = body;
+
+    // Render markdown if needed
+    if(!isCode) {
+      // Simple markdown renderer
+      const mdEl = document.getElementById('mdContent');
+      mdEl.innerHTML = simpleRenderMarkdown(raw.split('\n').slice(1).join('\n')); // Skip first title
+      // Apply syntax highlighting
+      mdEl.querySelectorAll('pre code').forEach(block => {
+        try { hljs.highlightElement(block); } catch(e) {}
+      });
+    }
+
+    // Setup navigation
+    setupNav(filePath, trackId, dayNum);
+
+  } catch(e) {
+    contentEl.innerHTML = `<div class="error-state">
+      <h2>⚠️ "${filePath}" লোড করা যায়নি</h2>
+      <p>লেসন ফাইলটি GitHub-এ আপলোড নাও থাকতে পারে।</p>
+      <a href="index.html" style="color:var(--accent);text-decoration:none">← Dashboard-এ ফিরুন</a>
+    </div>`;
+    console.error('Lesson load error:', e);
+  }
+}
+
+// ===== NAVIGATION =====
+async function setupNav(filePath, trackId, dayNum) {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  if(!trackId || !dayNum || !TRACKS[trackId]) {
+    prevBtn.style.opacity='0.4'; prevBtn.style.pointerEvents='none';
+    nextBtn.style.opacity='0.4'; nextBtn.style.pointerEvents='none';
+    return;
+  }
+
+  const files = await getFileList(trackId);
+  const idx = files.findIndex(f => f.n === dayNum);
+
+  if(idx > 0) {
+    const prev = files[idx-1];
+    const prevPath = TRACKS[trackId].base + prev.f.replace('_*.md','.md').replace('_*','');
+    prevBtn.href = 'lesson.html?file='+prevPath;
+    prevBtn.style.opacity='1'; prevBtn.style.pointerEvents='auto';
+  }
+  if(idx < files.length - 1) {
+    const next = files[idx+1];
+    const nextPath = TRACKS[trackId].base + next.f.replace('_*.md','.md').replace('_*','');
+    nextBtn.href = 'lesson.html?file='+nextPath;
+    nextBtn.style.opacity='1'; nextBtn.style.pointerEvents='auto';
+  }
+}
+
+// ===== SIMPLE MARKDOWN RENDERER =====
+function simpleRenderMarkdown(md) {
+  let html = '';
+  let inCode = false;
+  let codeBuf = [];
+  let codeLang = '';
+  let inTable = false;
+
+  const lines = md.split('\n');
+  for(let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    // Code blocks
+    if(line.startsWith('```')) {
+      if(!inCode) {
+        inCode = true;
+        codeLang = line.slice(3).trim();
+        codeBuf = [];
+        continue;
+      } else {
+        inCode = false;
+        html += '<pre><code class="language-'+(codeLang||'')+'">'+escapeHtml(codeBuf.join('\n'))+'</code></pre>\n';
+        continue;
+      }
+    }
+    if(inCode) { codeBuf.push(line); continue; }
+
+    // HTML comments
+    if(line.match(/^\s*<!--/)) continue;
+
+    // Empty line
+    if(line.trim() === '') { html += '\n'; continue; }
+
+    // Headings
+    if(line.startsWith('### ')) { html += '<h4>'+escapeInline(line.slice(4))+'</h4>\n'; continue; }
+    if(line.startsWith('## ')) { html += '<h3>'+escapeInline(line.slice(3))+'</h3>\n'; continue; }
+    if(line.startsWith('# ')) { html += '<h2>'+escapeInline(line.slice(2))+'</h2>\n'; continue; }
+
+    // Horizontal rule
+    if(line.match(/^---+/)) { html += '<hr>\n'; continue; }
+
+    // Blockquote
+    if(line.startsWith('> ')) { html += '<blockquote>'+escapeInline(line.slice(2))+'</blockquote>\n'; continue; }
+
+    // Unordered list
+    if(line.match(/^[\s]*[-*]\s/)) {
+      const text = line.replace(/^[\s]*[-*]\s/, '');
+      html += '<li>'+escapeInline(text)+'</li>\n';
+      // Check if next line is also a list item
+      if(i+1 < lines.length && !lines[i+1].match(/^[\s]*[-*]\s/) && !html.endsWith('</ul>\n')) {
+        // Don't wrap in <ul> for simplicity
+      }
+      continue;
+    }
+
+    // Ordered list
+    if(line.match(/^\d+\.\s/)) {
+      const text = line.replace(/^\d+\.\s/, '');
+      html += '<li>'+escapeInline(text)+'</li>\n';
+      continue;
+    }
+
+    // Table
+    if(line.includes('|')) {
+      if(line.match(/^\|.*\|$/)) {
+        if(!inTable) {
+          inTable = true;
+          html += '<table>\n';
+        }
+        if(line.match(/^\|[\s:-]+\|/)) continue; // Skip separator row
+        const cells = line.split('|').filter(c => c.trim() !== '');
+        html += '<tr>';
+        cells.forEach(c => html += '<td>'+escapeInline(c.trim())+'</td>');
+        html += '</tr>\n';
+        continue;
+      }
+    } else if(inTable) {
+      html += '</table>\n';
+      inTable = false;
+    }
+
+    // Regular paragraph
+    html += '<p>'+escapeInline(line)+'</p>\n';
+  }
+  if(inCode) html += '<pre><code>'+escapeHtml(codeBuf.join('\n'))+'</code></pre>\n';
+  if(inTable) html += '</table>\n';
+
+  // Clean up consecutive </p>\n<p> from adjacent list items
+  html = html.replace(/<\/li>\n<p>/g, '</li>\n');
+  html = html.replace(/<\/p>\n<li>/g, '\n<li>');
+  // Wrap consecutive <li> in <ul>
+  html = html.replace(/((?:<li>.*?<\/li>\n?)+)/g, '<ul>$1</ul>');
+
+  return html;
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escapeInline(text) {
+  text = escapeHtml(text);
+  // Bold
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Italic
+  text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  // Inline code
+  text = text.replace(/`(.+?)`/g, '<code>$1</code>');
+  // Links
+  text = text.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+  return text;
+}
+
+// ===== INIT =====
+window.addEventListener('DOMContentLoaded', () => {
+  loadLesson();
+});
+</script>
+</body>
+</html>
