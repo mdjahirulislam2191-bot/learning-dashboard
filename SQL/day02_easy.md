@@ -1,0 +1,104 @@
+# 🗄️ SQL Day 2 — CRUD Operations (ডাটা তৈরি/পড়া/বদলাও/মুছো)
+## সহজ বাংলায়
+
+---
+
+## 🎯 আজ কী শিখবে:
+
+| # | কাজ | কমান্ড |
+|---|-----|--------|
+| 1 | ডাটা ঢোকাও | `INSERT INTO` |
+| 2 | ডাটা পড়ো | `SELECT` |
+| 3 | ডাটা বদলাও | `UPDATE` |
+| 4 | ডাটা মুছো | `DELETE` |
+
+---
+
+## 📖 ১. ডাটা ঢোকাও — INSERT
+
+```sql
+-- একটা ডাটা
+INSERT INTO students (name, age, city, income)
+VALUES ('Jahirul', 30, 'Toronto', 4000.00);
+
+-- একসাথে একাধিক
+INSERT INTO students (name, age, city, income) VALUES
+('Tanni', 28, 'Toronto', 0.00),
+('Rahim', 25, 'Dhaka', 500.00),
+('Karim', 35, 'Dhaka', 800.00),
+('Salma', 22, 'Chittagong', 300.00);
+```
+
+---
+
+## 📖 ২. ডাটা পড়ো — SELECT
+
+```sql
+-- সব ডাটা
+SELECT * FROM students;
+
+-- শুদু নাম আর বয়স
+SELECT name, age FROM students;
+
+-- শর্ত সহ
+SELECT * FROM students WHERE age > 25;
+```
+
+---
+
+## 📖 ৩. ডাটা বদলাও — UPDATE
+
+```sql
+-- Jahirul-এর income বাড়াও
+UPDATE students
+SET income = 5000.00
+WHERE name = 'Jahirul';
+```
+
+> ⚠️ `WHERE` না দিলে ** সবার ** income বদলে যাবে!
+
+---
+
+## 📖 ৪. ডাটা মুছো — DELETE
+
+```sql
+-- নির্দিষ্ট ডাটা মুছো
+DELETE FROM students WHERE name = 'Salma';
+
+-- সব ডাটা মুছো (সতর্কতার সাথে!)
+DELETE FROM students;
+```
+
+---
+
+## ✍️ প্র্যাকটিস
+
+```sql
+-- Q1: নিজের তথ্য ঢোকাও
+INSERT INTO students (name, age, city, income)
+VALUES ('_____', ___, '_____', _____);
+
+-- Q2: 25 এর বেশি বয়সী দেখো
+SELECT * FROM students WHERE _____;
+
+-- Q3: নিজের income আপডেট করো
+UPDATE students
+SET income = _____
+WHERE name = '_____';
+
+-- Q4: একজন মুছো
+DELETE FROM students WHERE _____;
+```
+
+---
+
+## ✅ আজ যা শিখলে:
+
+- ✅ `INSERT INTO` — ডাটা ঢোকাও
+- ✅ `SELECT` — ডাটা পড়ো
+- ✅ `UPDATE` — ডাটা বদলাও
+- ✅ `DELETE` — ডাটা মুছো
+
+---
+
+**কোড রান করো:** ׀mysql -u root < ~/LearningPath/SQL/day02_mysql_crud.sql`
