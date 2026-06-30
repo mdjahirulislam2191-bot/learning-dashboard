@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 Commander HQ</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0c14;--card:#16161f;--border:rgba(255,255,255,0.08);--text:#f0f0f5;--dim:#a0a0b0;--accent:#00d4ff;--gold:#f59e0b;--green:#4ade80;--red:#ef4444;--purple:#a78bfa}
+html{font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:260px;background:linear-gradient(180deg,#0f0f1a,#14142a);border-right:1px solid var(--border);padding:20px 0;z-index:100;overflow-y:auto}
+.sidebar-logo{text-align:center;padding:0 16px 20px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.sidebar-logo h2{font-size:20px;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.sidebar-logo .tag{font-size:13px;color:var(--dim);margin-top:4px}
+.nav-group{padding:10px 18px 6px;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#555;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 18px;margin:3px 10px;border-radius:10px;font-size:16px;color:var(--dim);text-decoration:none;transition:all 0.2s;cursor:pointer}
+.nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.06);color:var(--text)}
+.nav-item.active{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.15)}
+.nav-icon{font-size:18px;width:24px;text-align:center}
+.main{margin-left:260px;padding:28px 32px;max-width:1400px}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.top-bar h1{font-size:28px;font-weight:700;display:flex;align-items:center;gap:12px}
+.top-bar h1 span{background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.top-date{font-size:14px;color:var(--dim);background:var(--card);padding:8px 18px;border-radius:20px;border:1px solid var(--border)}
+.motivation-bar{background:linear-gradient(135deg,#1a1a2e,#2d1b69);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px 24px;margin-bottom:24px;text-align:center;position:relative;overflow:hidden}
+.motivation-bar::before{content:'💪';position:absolute;font-size:70px;opacity:0.05;right:10px;bottom:-10px}
+.mq-text{font-size:18px;font-weight:500;font-style:italic;color:#f0e6ff;line-height:1.6}
+.mq-author{font-size:14px;color:var(--purple);margin-top:8px;font-weight:600}
+.mq-actions{margin-top:10px;font-size:13px;color:#555}
+.mq-actions a{color:var(--purple);text-decoration:none;margin:0 6px;cursor:pointer}
+.quick-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.qs-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;text-align:center}
+.qs-num{font-size:32px;font-weight:700}
+.qs-label{font-size:14px;color:var(--dim);margin-top:4px}
+.qs-card.completed .qs-num{color:var(--green)}
+.qs-card.in-progress .qs-num{color:var(--gold)}
+.qs-card.todo .qs-num{color:#444}
+.qs-card.score .qs-num{color:var(--accent)}
+.overall-row{display:flex;gap:20px;margin-bottom:28px;flex-wrap:wrap}
+.overall-ring-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 28px;display:flex;align-items:center;gap:24px;flex:1;min-width:280px}
+.ring-container{width:100px;height:100px;position:relative;flex-shrink:0}
+.ring-container svg{transform:rotate(-90deg)}
+.ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--accent)}
+.ring-info h3{font-size:18px;font-weight:600}
+.ring-info p{font-size:14px;color:var(--dim)}
+.ring-sub{display:flex;gap:16px;margin-top:10px;font-size:14px;color:var(--dim)}
+.ring-sub strong{color:var(--text)}
+.mission-section{margin-bottom:28px}
+.mission-section h2{font-size:20px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.date-badge{font-size:12px;font-weight:400;background:rgba(0,212,255,0.1);color:var(--accent);padding:3px 14px;border-radius:12px}
+.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.mission-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:3px solid #333}
+.mission-item:hover{background:#1c1c2e}
+.m-time{font-size:12px;color:#666;text-transform:uppercase;letter-spacing:0.5px}
+.m-title{font-size:16px;font-weight:600;margin:4px 0 2px}
+.m-desc{font-size:14px;color:var(--dim);line-height:1.4}
+.m-btn{display:inline-block;margin-top:8px;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;background:rgba(74,222,128,0.12);color:var(--green);text-decoration:none}
+.sql-m{border-left-color:#00758f}
+.biz-m{border-left-color:var(--gold)}
+.eng-m{border-left-color:#22d3ee}
+.job-m{border-left-color:var(--red)}
+.cfa-m{border-left-color:var(--purple)}
+.tracks-section{margin-bottom:20px}
+.tracks-section h2{font-size:20px;font-weight:600;margin-bottom:14px}
+.tracks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.track-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:all 0.25s}
+.track-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.track-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.track-header .left{display:flex;align-items:center;gap:10px}
+.t-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.track-header h3{font-size:16px;font-weight:600}
+.track-header .t-sub{font-size:13px;color:var(--dim)}
+.t-badge{font-size:12px;font-weight:600;padding:4px 12px;border-radius:10px;text-transform:uppercase}
+.t-badge.done{background:rgba(74,222,128,0.12);color:var(--green)}
+.t-badge.progress{background:rgba(245,158,11,0.12);color:var(--gold)}
+.t-badge.pending{background:rgba(100,100,120,0.15);color:#555}
+.t-progress{height:5px;background:rgba(255,255,255,0.05);border-radius:3px;margin-bottom:12px;overflow:hidden}
+.t-fill{height:100%;border-radius:3px;transition:width 0.6s ease}
+.t-current{background:rgba(255,255,255,0.03);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(255,255,255,0.05)}
+.tc-label{font-size:13px;color:var(--dim)}
+.tc-name{font-size:16px;font-weight:600;margin-top:2px}
+.tc-btn{background:rgba(255,255,255,0.08);color:var(--text);padding:8px 18px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap;border:none;cursor:pointer}
+.tc-btn:hover{background:rgba(255,255,255,0.15)}
+.tc-btn-green{background:rgba(74,222,128,0.2);color:var(--green)}
+.t-days{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.t-day{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;cursor:help}
+.t-day:hover{transform:scale(1.2)}
+.t-day.done{background:rgba(74,222,128,0.15);color:var(--green);border:1px solid rgba(74,222,128,0.25)}
+.t-day.current{background:rgba(245,158,11,0.18);color:var(--gold);border:1px solid rgba(245,158,11,0.35);animation:pulse 2s infinite}
+.t-day.todo{background:rgba(255,255,255,0.03);color:#333;border:1px solid rgba(255,255,255,0.05)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0.25)}50%{box-shadow:0 0 8px 2px rgba(245,158,11,0.1)}}
+.t-stats{display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid rgba(255,255,255,0.04);font-size:13px;color:var(--dim)}
+.footer{margin-top:30px;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:14px;text-align:center}
+.f-quote{font-style:italic;color:var(--dim);font-size:15px;max-width:500px;margin:0 auto;line-height:1.5}
+.f-quote span{color:var(--accent)}
+.f-links{margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.f-links a{display:inline-block;padding:10px 22px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:600}
+.f-moto{margin-top:12px;font-size:14px;color:var(--gold);font-weight:500}
+.f-updated{margin-top:10px;font-size:12px;color:#555}
+.mobile-menu-btn{display:none}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid rgba(74,222,128,0.3);color:var(--green);padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,0.4);transition:all 0.3s;pointer-events:none;opacity:0}
+@media(max-width:768px){
+  .sidebar{display:none;position:fixed;width:280px;z-index:1000}
+  .sidebar.open{display:block}
+  .main{margin-left:0;padding:16px}
+  .top-bar h1{font-size:20px}
+  .tracks-grid{grid-template-columns:1fr}
+  .mission-grid{grid-template-columns:1fr}
+  .quick-stats{grid-template-columns:repeat(2,1fr)}
+  .overall-row{flex-direction:column}
+  .overall-ring-card{flex-direction:column;text-align:center}
+  .mobile-menu-btn{display:block!important;position:fixed;top:12px;left:12px;z-index:1001;background:#1a1a2e;border:1px solid rgba(255,255,255,0.1);color:#fff;padding:10px 14px;border-radius:8px;font-size:20px;cursor:pointer}
+}
+@media(min-width:769px){.mobile-menu-btn{display:none!important}}
+</style>
+</head>
+<body>
+
+<button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h2>⚔ Commander HQ</h2>
+    <div class="tag">Learning Dashboard — Public</div>
+  </div>
+  <div class="nav-group">📌 Main</div>
+  <a class="nav-item active" href="#" onclick="scrollToTop()"><span class="nav-icon">📊</span> Dashboard</a>
+  <div class="nav-group">🧠 Learning</div>
+  <a class="nav-item" href="Python/INDEX.md" target="_blank"><span class="nav-icon">🐍</span> Python</a>
+  <a class="nav-item" href="SQL/INDEX.md" target="_blank"><span class="nav-icon">🗄️</span> SQL/MySQL</a>
+  <a class="nav-item" href="PowerBI/INDEX.md" target="_blank"><span class="nav-icon">📊</span> Power BI</a>
+  <a class="nav-item" href="CFA/INDEX.md" target="_blank"><span class="nav-icon">📈</span> CFA + Quant</a>
+  <a class="nav-item" href="English/day01_easy.md" target="_blank"><span class="nav-icon">🇬🇧</span> English</a>
+  <div class="nav-group">🤖 Data Science</div>
+  <a class="nav-item" href="DataScience/README.md" target="_blank"><span class="nav-icon">🔬</span> Data Science</a>
+  <a class="nav-item" href="MachineLearning/README.md" target="_blank"><span class="nav-icon">🧠</span> Machine Learning</a>
+  <a class="nav-item" href="DeepLearning/README.md" target="_blank"><span class="nav-icon">⚡</span> Deep Learning</a>
+  <div class="nav-group">🎯 Goals</div>
+  <a class="nav-item" href="Wealth/100B_MASTER_PLAN.md" target="_blank"><span class="nav-icon">💰</span> $100B Plan</a>
+    <a class="nav-item" href="PROGRESS.md" target="_blank"><span class="nav-icon">📋</span> Progress</a>
+  <a class="nav-item" href="dashboard.html"><span class="nav-icon">🔄</span> Refresh</a>
+</nav>
+
+<div class="main">
+  <div class="top-bar">
+    <h1>📊 <span>Commander's Dashboard</span></h1>
+    <div class="top-date" id="dateDisplay">—</div>
+  </div>
+
+  <div class="motivation-bar">
+    <div class="mq-text" id="mqText">loading...</div>
+    <div class="mq-author" id="mqAuthor">— loading...</div>
+    <div class="mq-actions"><a id="refreshQ">🔄 Next</a> · <a id="addQ">✏️ Add</a> <span id="mqNum"></span></div>
+  </div>
+
+  <div class="quick-stats">
+    <div class="qs-card completed"><div class="qs-num" id="qsDone">0</div><div class="qs-label">✅ Done</div></div>
+    <div class="qs-card in-progress"><div class="qs-num" id="qsCurrent">0</div><div class="qs-label">🔄 In Progress</div></div>
+    <div class="qs-card todo"><div class="qs-num" id="qsTodo">0</div><div class="qs-label">⬜ Not Started</div></div>
+    <div class="qs-card score"><div class="qs-num" id="qsPct">0%</div><div class="qs-label">🎯 Overall</div></div>
+  </div>
+
+  <div class="overall-row">
+    <div class="overall-ring-card">
+      <div class="ring-container" id="overallRing"></div>
+      <div class="ring-info">
+        <h3>📈 Overall Progress</h3>
+        <p>সব ট্র্যাক মিলিয়ে মোট অগ্রগতি</p>
+        <div class="ring-sub"><span>✅ <strong id="totalDoneSub">0</strong></span><span>📅 <strong id="totalDaysSub">0</strong></span><span>🏁 <strong id="totalPctSub">0%</strong></span></div>
+      </div>
+    </div>
+    <div class="overall-ring-card" style="border-color:rgba(245,158,11,0.15)">
+      <div style="font-size:40px">🎯</div>
+      <div class="ring-info">
+        <h3>⚡ Current Focus</h3>
+        <p id="currentFocusText">Loading...</p>
+        <div class="ring-sub"><span id="currentFocusDetail" style="color:var(--gold)">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mission-section">
+    <h2>🎯 Today's Mission <span class="date-badge" id="todayDate">—</span></h2>
+    <div class="mission-grid">
+      <div class="mission-item sql-m"><div class="m-time">1 hr 🗄️</div><div class="m-title">SQL: Subqueries</div><div class="m-desc">Day 6 — WHERE, FROM, SELECT</div><a class="m-btn" href="SQL/day06_mysql_subqueries.sql" target="_blank">▶ Open</a></div>
+      <div class="mission-item cfa-m"><div class="m-time">45 min 📈</div><div class="m-title">CFA: Ethics Standards I-II</div><div class="m-desc">Day 2 — Professionalism & Integrity</div><a class="m-btn" href="CFA/level1/day02_standards1.md" target="_blank">📖 Open</a></div>
+      <div class="mission-item eng-m"><div class="m-time">30 min 🗣️</div><div class="m-title">English: Greetings & Intro</div><div class="m-desc">Day 1 — Self-introduction practice</div><a class="m-btn" href="English/day01_easy.md" target="_blank">📖 Open</a></div>
+      <div class="mission-item biz-m"><div class="m-time">30 min 🚀</div><div class="m-title">$100B Plan Review</div><div class="m-desc">90-Day Action — 1 step today</div><a class="m-btn" href="Wealth/100B_MASTER_PLAN.md" target="_blank">📖 Open</a></div>
+      <div class="mission-item job-m"><div class="m-time">30 min 💼</div><div class="m-title">Job Hunt: Apply</div><div class="m-desc">Send 1-2 applications</div><a class="m-btn" href="PROGRESS.md" target="_blank">📋 Track</a></div>
+    </div>
+  </div>
+
+  <div class="tracks-section">
+    <h2>📚 All Learning Tracks</h2>
+    <div class="tracks-grid" id="tracksGrid"></div>
+  </div>
+
+  <div class="footer">
+    <div class="f-quote">"ছোট ছোট পদক্ষেপই বড় পরিবর্তন আনে। প্রতিদিন ২-৩ ঘণ্টা — <span>কম টাকায় বড় স্বপ্ন</span> দেখা যায়।"</div>
+    <div class="f-moto">💪 ২০ বছর — $১০০ বিলিয়ন — শুরু হয় আজকের ১ ঘণ্টা থেকে</div>
+    <div class="f-links">
+                  <a href="CFA/INDEX.md" target="_blank" style="background:#9747ff;color:#fff">📈 CFA+Quant</a>
+      <a href="DataScience/README.md" target="_blank" style="background:#0d6efd;color:#fff">🔬 Data Sci</a>
+      <a href="MachineLearning/README.md" target="_blank" style="background:#6f42c1;color:#fff">🧠 ML</a>
+      <a href="DeepLearning/README.md" target="_blank" style="background:#dc3545;color:#fff">⚡ DL</a>
+      <a href="PROGRESS.md" target="_blank" style="background:#333;color:#ccc">📋 Progress</a>
+    </div>
+    <div class="f-updated" id="lastUpdated">Last updated: loading...</div>
+  </div>
+</div>
+
+<script>
+const tracks=[
+{id:'python',icon:'🐍',color:'#3776ab',name:'Python',subtitle:'Data Analysis Foundation',goal:'6mo → Advanced',basePath:'Python/',dayFiles:{1:'week01_basics/day01_variables_easy.md',2:'week01_basics/day02_conditions_easy.md',3:'week01_basics/day03_loops_easy.md',4:'week01_basics/day04_lists_dicts.py',5:'week01_basics/day05_functions.py',6:'week01_basics/day06_strings.py',7:'week01_basics/day07_fileio.py',8:'week01_basics/day08_errors.py',9:'week01_basics/day09_numpy.py',10:'week01_basics/day10_pandas_series.py',11:'week01_basics/day11_pandas_dataframe.py',12:'week01_basics/day12_data_cleaning.py',13:'week01_basics/day13_matplotlib.py',14:'week01_basics/day14_aggregation.py',15:'week01_basics/day15_mini_project.py',16:'week01_basics/day16_apis_json.py',17:'week01_basics/day17_web_scraping.py',18:'week01_basics/day18_portfolio_project.py',19:'week01_basics/day19_portfolio_polish.py',20:'week01_basics/day20_capstone.py'},totalDays:20,completed:3,currentDay:4,days:[{n:1,label:'Variables & Data Types',status:'done'},{n:2,label:'Conditions (if/elif/else)',status:'done'},{n:3,label:'Loops (for/while)',status:'done'},{n:4,label:'Lists & Dictionaries',status:'current'},{n:5,label:'Functions',status:'todo'},{n:6,label:'Strings & Methods',status:'todo'},{n:7,label:'File I/O',status:'todo'},{n:8,label:'Error Handling',status:'todo'},{n:9,label:'NumPy',status:'todo'},{n:10,label:'Pandas Series',status:'todo'},{n:11,label:'Pandas DataFrame',status:'todo'},{n:12,label:'Data Cleaning',status:'todo'},{n:13,label:'Matplotlib',status:'todo'},{n:14,label:'Data Aggregation',status:'todo'},{n:15,label:'Mini Project',status:'todo'},{n:16,label:'APIs & JSON',status:'todo'},{n:17,label:'Web Scraping',status:'todo'},{n:18,label:'Portfolio Project',status:'todo'},{n:19,label:'Portfolio Polish',status:'todo'},{n:20,label:'Capstone',status:'todo'}]},
+{id:'sql',icon:'🗄️',color:'#00758f',name:'SQL (MySQL)',subtitle:'Database & Query Mastery',goal:'4wk → Intermediate',basePath:'SQL/',dayFiles:{1:'day01_easy.md',2:'day02_easy.md',3:'day03_easy.md',4:'day04_easy.md',5:'day05_easy.md',6:'day06_mysql_subqueries.sql',7:'day07_mysql_window.sql',8:'day08_mysql_ctes.sql',9:'day09_mysql_constraints.sql',10:'day10_mysql_alter_drop.sql',11:'day11_mysql_views_indexes.sql',12:'day12_mysql_procedures.sql',13:'day13_mysql_normalization.sql',14:'day14_mysql_portfolio.sql',15:'day15_mysql_backup.sql'},totalDays:15,completed:5,currentDay:6,days:[{n:1,label:'MySQL Setup & DB',status:'done'},{n:2,label:'CRUD Operations',status:'done'},{n:3,label:'WHERE, LIKE, IN',status:'done'},{n:4,label:'GROUP BY & HAVING',status:'done'},{n:5,label:'JOINs',status:'done'},{n:6,label:'Subqueries',status:'current'},{n:7,label:'Window Functions',status:'todo'},{n:8,label:'CTEs',status:'todo'},{n:9,label:'Constraints & Keys',status:'todo'},{n:10,label:'ALTER/CREATE/DROP',status:'todo'},{n:11,label:'Views & Indexes',status:'todo'},{n:12,label:'Stored Procedures',status:'todo'},{n:13,label:'DB Normalization',status:'todo'},{n:14,label:'Portfolio Project',status:'todo'},{n:15,label:'Backup & GitHub',status:'todo'}]},
+{id:'powerbi',icon:'📊',color:'#f2c811',name:'Power BI',subtitle:'Visualization & Dashboards',goal:'2mo → Intermediate',basePath:'PowerBI/',dayFiles:{1:'day01_easy.md',2:'day02_easy.md',3:'day03_data_import.md',4:'day04_dax_basics.md',5:'day05_relationships.md',6:'day06_filters_slicers.md',7:'day07_time_intelligence.md',8:'day08_custom_visuals.md',9:'day09_bookmarks.md',10:'day10_powerbi_service.md',11:'day11_mini_project.md',12:'day12_portfolio_project.md'},totalDays:12,completed:0,currentDay:1,days:[{n:1,label:'Setup & First Chart',status:'current'},{n:2,label:'Basic Charts',status:'todo'},{n:3,label:'Data Import',status:'todo'},{n:4,label:'DAX Basics',status:'todo'},{n:5,label:'Relationships',status:'todo'},{n:6,label:'Filters & Slicers',status:'todo'},{n:7,label:'Time Intelligence',status:'todo'},{n:8,label:'Custom Visuals',status:'todo'},{n:9,label:'Bookmarks',status:'todo'},{n:10,label:'Power BI Service',status:'todo'},{n:11,label:'Mini Project',status:'todo'},{n:12,label:'Portfolio Dashboard',status:'todo'}]},
+{id:'cfa',icon:'📈',color:'#9747ff',name:'CFA + Quant',subtitle:'Level 1 → 2 → 3 + Quant',goal:'2 years',basePath:'CFA/',dayFiles:{1:'INDEX.md',2:'level1/01_ethics.md'},totalDays:60,completed:0,currentDay:1,days:[{n:1,label:'📖 Ethics: Code of Ethics & Standards',status:'current'},{n:2,label:'📖 Ethics: Standards I-II',status:'todo'},{n:3,label:'📖 Ethics: Standards III-IV',status:'todo'},{n:4,label:'📖 Ethics: Standards V-VII',status:'todo'},{n:5,label:'📖 Ethics: GIPS',status:'todo'},{n:6,label:'✍️ Ethics: Practice Qs',status:'todo'},{n:7,label:'✍️ Ethics: Mock Test',status:'todo'},{n:8,label:'📖 Quant: TVM',status:'todo'},{n:9,label:'📖 Quant: DCF',status:'todo'},{n:10,label:'📖 Quant: Statistics',status:'todo'},{n:11,label:'📖 Quant: Distributions',status:'todo'},{n:12,label:'📖 Quant: Sampling',status:'todo'},{n:13,label:'✍️ Quant: Practice',status:'todo'},{n:14,label:'📖 Econ: Micro',status:'todo'},{n:15,label:'📖 Econ: Market Structures',status:'todo'},{n:16,label:'📖 Econ: Macro/GDP',status:'todo'},{n:17,label:'📖 Econ: Monetary Policy',status:'todo'},{n:18,label:'📖 Econ: Trade & FX',status:'todo'},{n:19,label:'✍️ Econ: Practice',status:'todo'},{n:20,label:'📖 FSA: Income Statements',status:'todo'},{n:21,label:'📖 FSA: Balance Sheets',status:'todo'},{n:22,label:'📖 FSA: Cash Flow',status:'todo'},{n:23,label:'📖 FSA: Ratios',status:'todo'},{n:24,label:'📖 FSA: Inventory',status:'todo'},{n:25,label:'✍️ FSA: Practice',status:'todo'},{n:26,label:'📖 Corporate: Governance',status:'todo'},{n:27,label:'📖 Corporate: Cap Budgeting',status:'todo'},{n:28,label:'📖 Corporate: Cost of Capital',status:'todo'},{n:29,label:'📖 Corporate: Working Capital',status:'todo'},{n:30,label:'✍️ Corporate: Practice',status:'todo'},{n:31,label:'📖 Equity: Market Structure',status:'todo'},{n:32,label:'📖 Equity: Indices',status:'todo'},{n:33,label:'📖 Equity: Efficiency',status:'todo'},{n:34,label:'📖 Equity: DDM',status:'todo'},{n:35,label:'📖 Equity: FCF Models',status:'todo'},{n:36,label:'✍️ Equity: Practice',status:'todo'},{n:37,label:'📖 FI: Bond Pricing',status:'todo'},{n:38,label:'📖 FI: Duration',status:'todo'},{n:39,label:'📖 FI: Credit Analysis',status:'todo'},{n:40,label:'📖 FI: ABS/MBS',status:'todo'},{n:41,label:'📖 FI: Rate Risk',status:'todo'},{n:42,label:'✍️ FI: Practice',status:'todo'},{n:43,label:'📖 Deriv: Forwards',status:'todo'},{n:44,label:'📖 Deriv: Futures',status:'todo'},{n:45,label:'📖 Deriv: Options',status:'todo'},{n:46,label:'📖 Deriv: Strategies',status:'todo'},{n:47,label:'📖 Deriv: Swaps',status:'todo'},{n:48,label:'✍️ Deriv: Practice',status:'todo'},{n:49,label:'📖 Alts: PE',status:'todo'},{n:50,label:'📖 Alts: Real Estate',status:'todo'},{n:51,label:'📖 Alts: Commodities',status:'todo'},{n:52,label:'📖 Alts: Hedge Funds',status:'todo'},{n:53,label:'📖 Alts: Infrastructure',status:'todo'},{n:54,label:'✍️ Alts: Practice',status:'todo'},{n:55,label:'📖 PM: Risk/Return',status:'todo'},{n:56,label:'📖 PM: CAPM/APT',status:'todo'},{n:57,label:'📖 PM: Construction',status:'todo'},{n:58,label:'📖 PM: Allocation',status:'todo'},{n:59,label:'📖 PM: Risk Mgmt',status:'todo'},{n:60,label:'✍️ PM: Practice',status:'todo'}]},
+{id:'english',icon:'🇬🇧',color:'#22d3ee',name:'English (C-Level)',subtitle:'Interview & Professional',goal:'6mo → Fluent',basePath:'English/',dayFiles:{1:'day01_easy.md',2:'day02_easy.md',3:'day03_easy.md',4:'day04_easy.md',5:'day05_easy.md',6:'day06_easy.md',7:'day07_easy.md',8:'day08_easy.md',9:'day09_easy.md',10:'day10_easy.md',11:'day11_easy.md',12:'day12_easy.md',13:'day13_adv.md',14:'day14_adv.md',15:'day15_adv.md',16:'day16_adv.md',17:'day17_adv.md',18:'day18_adv.md',19:'day19_adv.md',20:'day20_adv.md',21:'day21_adv.md',22:'day22_adv.md',23:'day23_adv.md',24:'day24_adv.md'},totalDays:24,completed:0,currentDay:1,days:[{n:1,label:'Greetings & Self-Intro',status:'current'},{n:2,label:'Background & Education',status:'todo'},{n:3,label:'Simple Q&A',status:'todo'},{n:4,label:'Describing Skills',status:'todo'},{n:5,label:'Professional Experience',status:'todo'},{n:6,label:'Week 1 Review',status:'todo'},{n:7,label:'Common Interview Qs',status:'todo'},{n:8,label:'STAR Method',status:'todo'},{n:9,label:'Technical Vocab',status:'todo'},{n:10,label:'Behavioral Qs',status:'todo'},{n:11,label:'Asking Questions Back',status:'todo'},{n:12,label:'Week 2 Review - Mock',status:'todo'},{n:13,label:'Emails & Reports',status:'todo'},{n:14,label:'Meeting English',status:'todo'},{n:15,label:'Presentations',status:'todo'},{n:16,label:'Negotiation Phrases',status:'todo'},{n:17,label:'Networking',status:'todo'},{n:18,label:'Week 3 Review',status:'todo'},{n:19,label:'C-Level Speech',status:'todo'},{n:20,label:'Complex Scenarios',status:'todo'},{n:21,label:'Elevator Pitch',status:'todo'},{n:22,label:'Panel Interview',status:'todo'},{n:23,label:'Full Mock Interview',status:'todo'},{n:24,label:'Final Review',status:'todo'}]},
+
+totalDays:10,completed:0,currentDay:1,days:[{n:1,label:'90-Day Action Plan',status:'current'},{n:2,label:'Immigration AI MVP',status:'todo'},{n:3,label:'Data Analyst Job',status:'todo'},{n:4,label:'$1K MRR',status:'todo'},{n:5,label:'$1M+ ARR',status:'todo'},{n:6,label:'First Real Estate',status:'todo'},{n:7,label:'FinTech Venture',status:'todo'},{n:8,label:'Jahir Holdings Group',status:'todo'},{n:9,label:'$1B Milestone',status:'todo'},{n:10,label:'$100B FINISH LINE',status:'todo'}]},
+{id:'excel',icon:'📗',color:'#217346',name:'Excel Advanced',subtitle:'Pivot, VLOOKUP, Macros',goal:'1mo',basePath:'Excel/',dayFiles:{1:'day01_pivot_intro.md',2:'day02_pivot_advanced.md',3:'day03_vlookup_index.md',4:'day04_xlookup.md',5:'day05_conditional_format.md',6:'day06_charts_sparklines.md',7:'day07_whatif_analysis.md',8:'day08_power_query.md',9:'day09_advanced_formulas.md',10:'day10_macros_vba.md',11:'day11_dashboard_design.md',12:'day12_dashboard_project.md'},totalDays:12,completed:0,currentDay:1,days:[{n:1,label:'Pivot Tables Intro',status:'current'},{n:2,label:'Pivot Advanced Filters',status:'todo'},{n:3,label:'VLOOKUP & INDEX-MATCH',status:'todo'},{n:4,label:'XLOOKUP',status:'todo'},{n:5,label:'Conditional Formatting',status:'todo'},{n:6,label:'Charts & Sparklines',status:'todo'},{n:7,label:'What-If Analysis',status:'todo'},{n:8,label:'Power Query',status:'todo'},{n:9,label:'Advanced Formulas',status:'todo'},{n:10,label:'Macros & VBA',status:'todo'},{n:11,label:'Dashboard Design',status:'todo'},{n:12,label:'Portfolio Dashboard',status:'todo'}]},
+{id:'stats',icon:'📉',color:'#8b5cf6',name:'Statistics',subtitle:'For Data Science',goal:'1mo',basePath:'Statistics/',dayFiles:{1:'day01_descriptive.md',2:'day02_variance_std.md',3:'day03_probability.md',4:'day04_normal_distribution.md',5:'day05_sampling_ci.md',6:'day06_hypothesis_testing.md',7:'day07_correlation.md',8:'day08_regression.md',9:'day09_anova.md',10:'day10_portfolio_stats.md'},totalDays:10,completed:0,currentDay:1,days:[{n:1,label:'Descriptive Stats',status:'current'},{n:2,label:'Variance & Std Dev',status:'todo'},{n:3,label:'Probability Basics',status:'todo'},{n:4,label:'Normal Distribution',status:'todo'},{n:5,label:'Sampling & CI',status:'todo'},{n:6,label:'Hypothesis Testing',status:'todo'},{n:7,label:'Correlation',status:'todo'},{n:8,label:'Regression',status:'todo'},{n:9,label:'ANOVA',status:'todo'},{n:10,label:'Portfolio Project',status:'todo'}]},
+{id:'git',icon:'🐙',color:'#f05032',name:'Git & GitHub',subtitle:'Version Control',goal:'2wk',basePath:'Git/',dayFiles:{1:'day01_intro.md',2:'day02_basic_commands.md',3:'day03_branching_merging.md',4:'day04_remote_github.md',5:'day05_pull_requests.md',6:'day06_gitignore_branching.md',7:'day07_collaboration_workflow.md',8:'day08_portfolio.md'},totalDays:8,completed:0,currentDay:1,days:[{n:1,label:'Git Intro & Setup',status:'current'},{n:2,label:'Basic Commands',status:'todo'},{n:3,label:'Branching & Merging',status:'todo'},{n:4,label:'Remote & GitHub',status:'todo'},{n:5,label:'Pull Requests',status:'todo'},{n:6,label:'.gitignore & Strategy',status:'todo'},{n:7,label:'Collaboration',status:'todo'},{n:8,label:'Portfolio Project',status:'todo'}]},
+{id:'datascience',icon:'🔬',color:'#0d6efd',name:'Data Science',subtitle:'Statistics + EDA + Viz',goal:'30 days',basePath:'DataScience/',dayFiles:{1:'day01_ds_overview.md',2:'day02_python_for_ds.md',3:'day03_numpy_deep_dive.md',4:'day04_pandas_mastery1.md',5:'day05_pandas_mastery2.md',6:'day06_data_cleaning.md',7:'day07_eda.md',8:'day08_visualization.md',9:'day09_feature_engineering.md',10:'day10_project_cleaning_eda.md',11:'day11_probability.md',12:'day12_feature_engineering.md',13:'day13_sampling.md',14:'day14_hypothesis_testing.md',15:'day15_project_sampling_testing.md',16:'day16_linear_regression.md',17:'day17_multiple_regression.md',18:'day18_evaluation_metrics.md',19:'day19_logistic_regression.md',20:'day20_decision_trees.md',21:'day21_confusion_matrix.md',22:'day22_classification_metrics.md',23:'day23_kmeans.md',24:'day24_pca.md',25:'day25_time_series.md',26:'day26_project_regression.md',27:'day27_project_classification.md',28:'day28_project_clustering.md',29:'day29_capstone_part1.md',30:'day30_capstone_part2.md'},totalDays:30,completed:0,currentDay:1,days:[{n:1,label:'DS Overview',status:'current'},{n:2,label:'Python for DS',status:'todo'},{n:3,label:'NumPy Deep Dive',status:'todo'},{n:4,label:'Pandas Mastery 1',status:'todo'},{n:5,label:'Pandas Mastery 2',status:'todo'},{n:6,label:'Data Cleaning',status:'todo'},{n:7,label:'EDA',status:'todo'},{n:8,label:'Visualization',status:'todo'},{n:9,label:'Feature Engineering',status:'todo'},{n:10,label:'Project: Cleaning & EDA',status:'todo'},{n:11,label:'Probability',status:'todo'},{n:12,label:'Feature Engineering 2',status:'todo'},{n:13,label:'Sampling',status:'todo'},{n:14,label:'Hypothesis Testing',status:'todo'},{n:15,label:'Project: Sampling',status:'todo'},{n:16,label:'Linear Regression',status:'todo'},{n:17,label:'Multiple Regression',status:'todo'},{n:18,label:'Eval Metrics',status:'todo'},{n:19,label:'Logistic Regression',status:'todo'},{n:20,label:'Decision Trees',status:'todo'},{n:21,label:'Confusion Matrix',status:'todo'},{n:22,label:'Classification Metrics',status:'todo'},{n:23,label:'K-Means',status:'todo'},{n:24,label:'PCA',status:'todo'},{n:25,label:'Time Series',status:'todo'},{n:26,label:'Project: Regression',status:'todo'},{n:27,label:'Project: Classification',status:'todo'},{n:28,label:'Project: Clustering',status:'todo'},{n:29,label:'Capstone Part 1',status:'todo'},{n:30,label:'Capstone Part 2',status:'todo'}]},
+{id:'ml',icon:'🧠',color:'#6f42c1',name:'Machine Learning',subtitle:'Regression + Classification',goal:'60 days',basePath:'MachineLearning/',dayFiles:{1:'day01_ml_overview.md',2:'day02_supervised_unsupervised.md',3:'day03_python_ml_stack_scikit.md',4:'day04_data_preprocessing.md',5:'day05_train_test_split.md',6:'day06_linear_regression.md',7:'day07_multiple_regression.md',8:'day08_polynomial_regression.md',9:'day09_regularization_ridge_lasso.md',10:'day10_evaluation_metrics.md',11:'day11_logistic_regression.md',12:'day12_decision_trees.md',13:'day13_random_forest.md',14:'day14_gradient_boosting.md',15:'day15_xgboost.md',16:'day16_svm.md',17:'day17_knn.md',18:'day18_naive_bayes.md',19:'day19_ensemble_methods.md',20:'day20_model_evaluation_cv_grid.md',21:'day21_kmeans.md',22:'day22_hierarchical_clustering.md',23:'day23_dbscan.md',24:'day24_pca.md',25:'day25_tsne.md',26:'day26_feature_engineering.md',27:'day27_feature_selection.md',28:'day28_hyperparameter_tuning.md',29:'day29_pipeline.md',30:'day30_imbalanced_data.md',31:'day31_time_series_forecasting.md',32:'day32_arima.md',33:'day33_prophet.md',34:'day34_lstm_basics.md',35:'day35_stock_prediction.md',36:'day36_recommender_systems.md',37:'day37_anomaly_detection.md',38:'day38_nlp_basics.md',39:'day39_sentiment_analysis.md',40:'day40_text_classification.md',41:'day41_model_deployment.md',42:'day42_model_serialization.md',43:'day43_docker_intro.md',44:'day44_mlflow_intro.md',45:'day45_model_monitoring.md',46:'day46_ab_testing.md',47:'day47_experiment_design.md',48:'day48_causality.md',49:'day49_fairness_ml.md',50:'day50_ethics_ml.md',51:'day51_stacking_blending.md',52:'day52_feature_importance.md',53:'day53_shap_values.md',54:'day54_partial_dependence.md',55:'day55_model_interpretability.md',56:'day56_capstone_data_prep.md',57:'day57_capstone_feature_eng.md',58:'day58_capstone_model_building.md',59:'day59_capstone_evaluation.md',60:'day60_capstone_deploy.md'},totalDays:60,completed:0,currentDay:1,days:[{n:1,label:'ML Overview',status:'current'},{n:2,label:'Sup vs Unsup',status:'todo'},{n:3,label:'Python ML Stack',status:'todo'},{n:4,label:'Data Preprocessing',status:'todo'},{n:5,label:'Train/Test Split',status:'todo'},{n:6,label:'Linear Regression',status:'todo'},{n:7,label:'Multiple Regression',status:'todo'},{n:8,label:'Polynomial Reg',status:'todo'},{n:9,label:'Ridge/Lasso',status:'todo'},{n:10,label:'Eval Metrics',status:'todo'},{n:11,label:'Logistic Regression',status:'todo'},{n:12,label:'Decision Trees',status:'todo'},{n:13,label:'Random Forest',status:'todo'},{n:14,label:'Gradient Boosting',status:'todo'},{n:15,label:'XGBoost',status:'todo'},{n:16,label:'SVM',status:'todo'},{n:17,label:'KNN',status:'todo'},{n:18,label:'Naive Bayes',status:'todo'},{n:19,label:'Ensemble Methods',status:'todo'},{n:20,label:'CV & Grid Search',status:'todo'},{n:21,label:'K-Means',status:'todo'},{n:22,label:'Hierarchical Clust',status:'todo'},{n:23,label:'DBSCAN',status:'todo'},{n:24,label:'PCA',status:'todo'},{n:25,label:'t-SNE',status:'todo'},{n:26,label:'Feature Engineering',status:'todo'},{n:27,label:'Feature Selection',status:'todo'},{n:28,label:'Hyperparameter Tuning',status:'todo'},{n:29,label:'Pipeline',status:'todo'},{n:30,label:'Imbalanced Data',status:'todo'},{n:31,label:'Time Series Forecast',status:'todo'},{n:32,label:'ARIMA',status:'todo'},{n:33,label:'Prophet',status:'todo'},{n:34,label:'LSTM Basics',status:'todo'},{n:35,label:'Stock Prediction',status:'todo'},{n:36,label:'Recommender Systems',status:'todo'},{n:37,label:'Anomaly Detection',status:'todo'},{n:38,label:'NLP Basics',status:'todo'},{n:39,label:'Sentiment Analysis',status:'todo'},{n:40,label:'Text Classification',status:'todo'},{n:41,label:'Model Deployment',status:'todo'},{n:42,label:'Model Serialization',status:'todo'},{n:43,label:'Docker Intro',status:'todo'},{n:44,label:'MLflow',status:'todo'},{n:45,label:'Model Monitoring',status:'todo'},{n:46,label:'A/B Testing',status:'todo'},{n:47,label:'Experiment Design',status:'todo'},{n:48,label:'Causality',status:'todo'},{n:49,label:'Fairness in ML',status:'todo'},{n:50,label:'ML Ethics',status:'todo'},{n:51,label:'Stacking/Blending',status:'todo'},{n:52,label:'Feature Importance',status:'todo'},{n:53,label:'SHAP Values',status:'todo'},{n:54,label:'Partial Dependence',status:'todo'},{n:55,label:'Interpretability',status:'todo'},{n:56,label:'Capstone: Data Prep',status:'todo'},{n:57,label:'Capstone: Features',status:'todo'},{n:58,label:'Capstone: Models',status:'todo'},{n:59,label:'Capstone: Eval',status:'todo'},{n:60,label:'Capstone: Deploy',status:'todo'}]},
+{id:'dl',icon:'⚡',color:'#dc3545',name:'Deep Learning',subtitle:'CNN + RNN + LSTM',goal:'60 days',basePath:'DeepLearning/',dayFiles:{1:'day01_dl_overview.md',2:'day02_neural_networks_basics.md',3:'day03_perceptron.md',4:'day04_activation_functions.md',5:'day05_backpropagation.md',6:'day06_tensorflow_pytorch_intro.md',7:'day07_building_first_nn.md',8:'day08_loss_functions_optimizers.md',9:'day09_loss_functions_optimizers_deep.md',10:'day10_training_loop_evaluation.md',11:'day11_ann_deep_dive.md',12:'day12_hyperparameter_tuning.md',13:'day13_regularization.md',14:'day14_early_stopping_callbacks.md',15:'day15_project_ann_stock_prediction.md',16:'day16_cnn_basics.md',17:'day17_convolution_pooling.md',18:'day18_image_classification.md',19:'day19_transfer_learning.md',20:'day20_finetuning_practical_cnn.md',21:'day21_rnn_basics.md',22:'day22_lstm.md',23:'day23_gru.md',24:'day24_time_series_lstm.md',25:'day25_stock_prediction_lstm.md',26:'day26_sequence_models.md',27:'day27_bidirectional_rnn.md',28:'day28_attention.md',29:'day29_encoder_decoder.md',30:'day30_seq2seq.md',31:'day31_autoencoders.md',32:'day32_denoising_ae.md',33:'day33_vae.md',34:'day34_dim_reduction_ae.md',35:'day35_anomaly_detection_ae.md',36:'day36_gans.md',37:'day37_dcgan.md',38:'day38_conditional_gan.md',39:'day39_synthetic_data_gan.md',40:'day40_gan_evaluation.md',41:'day41_transfer_learning.md',42:'day42_bert.md',43:'day43_transformers.md',44:'day44_finetune_transformers.md',45:'day45_nlp_transformers.md',46:'day46_rl_intro.md',47:'day47_q_learning.md',48:'day48_dqn.md',49:'day49_policy_gradients.md',50:'day50_rl_trading.md',51:'day51_resnet.md',52:'day52_inception.md',53:'day53_efficientnet.md',54:'day54_model_pruning.md',55:'day55_quantization.md',56:'day56_capstone_data_prep.md',57:'day57_capstone_lstm.md',58:'day58_capstone_evaluation.md',59:'day59_capstone_portfolio.md',60:'day60_capstone_summary.md'},totalDays:60,completed:0,currentDay:1,days:[{n:1,label:'DL Overview',status:'current'},{n:2,label:'NN Basics',status:'todo'},{n:3,label:'Perceptron',status:'todo'},{n:4,label:'Activation Functions',status:'todo'},{n:5,label:'Backpropagation',status:'todo'},{n:6,label:'TF/PyTorch Intro',status:'todo'},{n:7,label:'First NN',status:'todo'},{n:8,label:'Loss & Optimizers',status:'todo'},{n:9,label:'Optimizers Deep',status:'todo'},{n:10,label:'Training Loop',status:'todo'},{n:11,label:'ANN Deep Dive',status:'todo'},{n:12,label:'Hyperparameter Tuning',status:'todo'},{n:13,label:'Regularization',status:'todo'},{n:14,label:'Early Stopping',status:'todo'},{n:15,label:'ANN Stock Project',status:'todo'},{n:16,label:'CNN Basics',status:'todo'},{n:17,label:'Conv & Pooling',status:'todo'},{n:18,label:'Image Classification',status:'todo'},{n:19,label:'Transfer Learning',status:'todo'},{n:20,label:'CNN Finetune',status:'todo'},{n:21,label:'RNN Basics',status:'todo'},{n:22,label:'LSTM',status:'todo'},{n:23,label:'GRU',status:'todo'},{n:24,label:'Time Series LSTM',status:'todo'},{n:25,label:'Stock LSTM',status:'todo'},{n:26,label:'Sequence Models',status:'todo'},{n:27,label:'Bidirectional RNN',status:'todo'},{n:28,label:'Attention',status:'todo'},{n:29,label:'Encoder-Decoder',status:'todo'},{n:30,label:'Seq2Seq',status:'todo'},{n:31,label:'Autoencoders',status:'todo'},{n:32,label:'Denoising AE',status:'todo'},{n:33,label:'VAE',status:'todo'},{n:34,label:'Dim Reduction AE',status:'todo'},{n:35,label:'Anomaly Detection',status:'todo'},{n:36,label:'GANs',status:'todo'},{n:37,label:'DCGAN',status:'todo'},{n:38,label:'Conditional GAN',status:'todo'},{n:39,label:'Synthetic Data',status:'todo'},{n:40,label:'GAN Evaluation',status:'todo'},{n:41,label:'Transfer Learning 2',status:'todo'},{n:42,label:'BERT',status:'todo'},{n:43,label:'Transformers',status:'todo'},{n:44,label:'Finetune Transformers',status:'todo'},{n:45,label:'NLP Transformers',status:'todo'},{n:46,label:'RL Intro',status:'todo'},{n:47,label:'Q-Learning',status:'todo'},{n:48,label:'DQN',status:'todo'},{n:49,label:'Policy Gradients',status:'todo'},{n:50,label:'RL for Trading',status:'todo'},{n:51,label:'ResNet',status:'todo'},{n:52,label:'Inception',status:'todo'},{n:53,label:'EfficientNet',status:'todo'},{n:54,label:'Model Pruning',status:'todo'},{n:55,label:'Quantization',status:'todo'},{n:56,label:'Capstone: Data Prep',status:'todo'},{n:57,label:'Capstone: LSTM',status:'todo'},{n:58,label:'Capstone: Eval',status:'todo'},{n:59,label:'Capstone: Portfolio',status:'todo'},{n:60,label:'Capstone: Summary',status:'todo'}]}
+if(t.days.length<=24){t.days.forEach(d=>{const cls=d.status==='done'?'t-day done':(d.status==='current'?'t-day current':'t-day todo');const fp=t.dayFiles&&t.dayFiles[d.n]?t.basePath+t.dayFiles[d.n]:'';const title='Day '+d.n+': '+(d.label||'—');if(fp)daysHtml+='<a href="'+fp+'" target="_blank" class="'+cls+'" title="📖 '+title+'">'+d.n+'</a>';else daysHtml+='<div class="'+cls+'" title="'+title+'">'+d.n+'</div>'})}else{daysHtml='<div class="t-day current" title="Day 1">1</div><div class="t-day todo" title="Long plan">…'+t.totalDays+'</div>'}
